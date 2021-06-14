@@ -21,6 +21,5 @@ Route::get('/dashboard' , 'DashboardController@index')->name('dashboard');
 // Route::post('/product/store' , 'ProductController@store')->name('productstore');
 
 Route::resource('product' , 'ProductController');
-Route::resource('product2' , 'ProductController');
 Route::resource('product_stock' , 'ProductStockController');
 
