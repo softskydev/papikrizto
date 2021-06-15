@@ -75,6 +75,9 @@
                 <li>
 					<a class="waves-effect" href="{{ route('product_stock.index') }}"><i class="menu-icon ti-import"></i><span>Product Satuan</span></a>
 				</li>
+				<li>
+					<a class="waves-effect" href="{{ route('sales.index') }}"><i class="menu-icon ti-comments-smiley"></i><span>Sales</span></a>
+				</li>
 			</ul>
 		</div>
 		<!-- /.navigation -->
