@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Product;
 
 class StockController extends Controller
 {
@@ -13,7 +14,8 @@ class StockController extends Controller
      */
     public function index()
     {
-        //
+        $product['data'] = Product::all();
+        return view('stocks.index' , $product);
     }
 
     /**

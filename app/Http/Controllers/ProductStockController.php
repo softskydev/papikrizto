@@ -7,6 +7,7 @@ use App\ProductStock;
 
 class ProductStockController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +15,14 @@ class ProductStockController extends Controller
      */
     public function index()
     {
-        $product['data'] = ProductStock::leftJoin('product_stocks as stock_new','stock_new.id','product_stocks.stock_id')->select('product_stocks.*','stock_new.nama_stock as satuan')->get();        
+        $table    = 'product_stocks as stock_new';
+        $column_a = 'stock_new.id';
+        $column_b = 'product_stocks.stock_id';
+        
+
+        $product['data'] = ProductStock::leftJoin($table,$column_a,$column_b)
+                                       ->select('product_stocks.*','stock_new.nama_stock as satuan')
+                                       ->get();        
         return view('product_stock.index' , $product);
     }
 
@@ -60,7 +68,9 @@ class ProductStockController extends Controller
      */
     public function show($id)
     {
-        //
+        $product['detail'] = ProductStock::find($id);
+        $product['current_stock'] = ProductStock::all();
+        return view('product_stock.edit' , $product);
     }
 
     /**

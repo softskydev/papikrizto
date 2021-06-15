@@ -2,7 +2,7 @@
 $(document).ready(function () {
     
     $("#satuan_id").selectpicker();
-
+    prevList();
 });
 
 

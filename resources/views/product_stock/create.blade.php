@@ -13,7 +13,7 @@ Data Satuan Stock | Ubiku Dashboard
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
 					<h4 class="box-title">Tambah Jenis Stock Baru</h4>
-                    <p> Tambahkan Stock anda untuk dikelola </p>
+                    <p> Tambahkan Jenis Stock anda untuk dikelola </p>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>

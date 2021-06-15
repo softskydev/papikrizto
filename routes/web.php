@@ -22,4 +22,5 @@ Route::get('/dashboard' , 'DashboardController@index')->name('dashboard');
 
 Route::resource('product' , 'ProductController');
 Route::resource('product_stock' , 'ProductStockController');
+Route::resource('stock' , 'StockController');
 
