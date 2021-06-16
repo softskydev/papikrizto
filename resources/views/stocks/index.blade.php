@@ -46,7 +46,7 @@ Data Stock | Ubiku Dashboard
 								<td>{{$stock->product}}</td>
 								<td>{{$stock->stock}}</td>
 								<td>{{$stock->product_stock}}</td>
-								<td>{{$stock->price}}</td>
+								<td>{{rupiah($stock->price)}}</td>
 								<td>
 									<a class="btn btn-xs btn-rounded btn-warning" href="{{ route('stock.show' , ['stock' => $stock->id ]) }}"> 
 										<i class="menu-icon fa fa-pencil "> </i> Edit 

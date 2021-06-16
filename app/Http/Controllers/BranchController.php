@@ -94,7 +94,7 @@ class BranchController extends Controller
         $branch = Branch::find($id);
         $branch->name = $request->name;
         $branch->username = $request->username;
-        if($request->password != "") $branch->password = md5($request->password);
+        // if($request->password != "") $branch->password = md5($request->password);
         $branch->save();
 
         $status = [
