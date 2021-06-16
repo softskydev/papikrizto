@@ -42,13 +42,17 @@ Data Product | Ubiku Dashboard
 								<th scope="row">{{ $no++ }}</th> 
 								<td>{{ $product->name }}</td>
 								<td>
-									<a class="btn btn-xs btn-rounded btn-warning" href="{{ route('product.show' , ['product' => $product->id ]) }}"> 
+									<a class="btn btn-xs btn-rounded btn-info" href="{{ route('branch.show', $product->id) }}"> 
+										<i class="menu-icon fa fa-shop "> </i> Cabang
+									</a>
+
+									{{-- <a class="btn btn-xs btn-rounded btn-warning" href="{{ route('product.show' , ['product' => $product->id ]) }}"> 
 										<i class="menu-icon fa fa-pencil "> </i> Edit 
 									</a>
 									
 									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $product->id }}')" > 
 										<i class="menu-icon fa fa-trash "> </i> Hapus  
-									</button>
+									</button> --}}
 								</td> 
 							</tr> 
 						@empty

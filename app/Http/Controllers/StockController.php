@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use App\ProductStock;
+use App\Stock;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -14,8 +17,10 @@ class StockController extends Controller
      */
     public function index()
     {
-        $product['data'] = Product::all();
-        return view('stocks.index' , $product);
+        $stock['data'] = Stock::join('products', 'products.id', '=', 'stocks.product_id')
+                            ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                            ->select('stocks.*', DB::raw('products.name AS product'), DB::raw('product_stocks.nama_stock AS product_stock'))->get();
+        return view('stocks.index' , $stock);
     }
 
     /**
@@ -25,7 +30,10 @@ class StockController extends Controller
      */
     public function create()
     {
-        //
+        $stock['product_data'] = Product::all();
+        $stock['product_stock_data'] = ProductStock::all();
+        
+        return view('stocks.create', $stock);
     }
 
     /**
@@ -36,7 +44,19 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $stock = new Stock;
+        $stock->product_id = $request->product_id;
+        $stock->product_stock_id = $request->product_stock_id;
+        $stock->price = $request->price;
+        $stock->stock = $request->stock;
+        $stock->save();
+
+        $status = [
+            'status' => 'success',
+            'msg' => 'Data berhasil di simpan'
+        ];
+
+        return redirect()->route('stock.index')->with( $status );
     }
 
     /**
@@ -47,7 +67,14 @@ class StockController extends Controller
      */
     public function show($id)
     {
-        //
+        $stock['detail'] = Stock::join('products', 'products.id', '=', 'stocks.product_id')
+                            ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                            ->select('stocks.*', DB::raw('products.name AS product'), DB::raw('product_stocks.nama_stock AS product_stock'))->where("stocks.id", $id)->first();
+
+        $stock['product_data'] = Product::all();
+        $stock['product_stock_data'] = ProductStock::all();
+
+        return view('stocks.edit', $stock);
     }
 
     /**
@@ -70,7 +97,19 @@ class StockController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $stock = Stock::find($id);
+        $stock->product_id = $request->product_id;
+        $stock->product_stock_id = $request->product_stock_id;
+        $stock->price = $request->price;
+        $stock->stock = $request->stock;
+        $stock->save();
+
+        $status = [
+            'status' => 'info',
+            'msg' => 'Data berhasil di update'
+        ];
+
+        return redirect()->route('stock.index')->with( $status );
     }
 
     /**
@@ -81,6 +120,13 @@ class StockController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Stock::findOrFail($id)->delete();
+        
+        $status = [
+            'status' => 'danger',
+            'msg' => 'Data berhasil di hapus'
+        ];
+
+        echo json_encode($status);
     }
 }

@@ -25,3 +25,6 @@ Route::resource('product_stock' , 'ProductStockController');
 Route::resource('stock' , 'StockController');
 Route::resource('sales' , 'SalesController');
 
+Route::get('branch/create/{id}', 'BranchController@create');
+Route::get('branch/edit/{id}', 'BranchController@edit');
+Route::resource('branch' , 'BranchController', ['except' => ['create', 'edit']]);

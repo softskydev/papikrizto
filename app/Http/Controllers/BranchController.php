@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Sales;
+use App\Branch;
 use App\Product;
 
-class SalesController extends Controller
+class BranchController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,7 @@ class SalesController extends Controller
      */
     public function index()
     {
-        $sales['data'] = Sales::all();
-        return view('sales.index' , $sales);
+        
     }
 
     /**
@@ -24,11 +23,10 @@ class SalesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        $sales['product_data'] = Product::all();
-
-        return view('sales.create', $sales);
+        $branch['product_id'] = $id;
+        return view('branch.create', $branch);
     }
 
     /**
@@ -40,20 +38,19 @@ class SalesController extends Controller
     public function store(Request $request)
     {
         
-        $sales = new Sales;
-        $sales->name = $request->name;
-        $sales->birth_day = $request->birth_day;
-        $sales->gender = $request->gender;
-        $sales->product_id = $request->product_id;
-        $sales->save();
+        $branch = new Branch;
+        $branch->name = $request->name;
+        $branch->username = $request->username;
+        $branch->password = md5($request->password);
+        $branch->product_id = $request->product_id;
+        $branch->save();
 
         $status = [
             'status' => 'success',
             'msg' => 'Data berhasil di simpan'
         ];
 
-        return redirect()->route('sales.index')->with( $status );
-
+        return redirect()->route('branch.show', $request->product_id)->with( $status );
 
     }
 
@@ -65,8 +62,11 @@ class SalesController extends Controller
      */
     public function show($id)
     {
-        $sales = Sales::find($id);
-        return view('sales.edit' , ['detail'=> $sales]);
+        $branch['product'] = Product::where('id', $id)->first()->name;
+        $branch['product_id'] = Product::where('id', $id)->first()->id;
+        $branch['data'] = Branch::where('product_id', $id)->get();
+        
+        return view('branch.show' , $branch);
     }
 
     /**
@@ -77,7 +77,9 @@ class SalesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $branch['detail'] = Branch::find($id);
+        $branch['product_id'] = Branch::where('id', $id)->first()->product_id;
+        return view('branch.edit' , $branch);
     }
 
     /**
@@ -89,18 +91,18 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $sales = Sales::find($id);
-        $sales->name = $request->name;
-        $sales->birth_day = $request->birth_day;
-        $sales->gender = $request->gender;
-        $sales->save();
+        $branch = Branch::find($id);
+        $branch->name = $request->name;
+        $branch->username = $request->username;
+        if($request->password != "") $branch->password = md5($request->password);
+        $branch->save();
 
         $status = [
             'status' => 'info',
             'msg' => 'Data berhasil di update'
         ];
 
-        return redirect()->route('sales.index')->with( $status );
+        return redirect()->route('branch.show', $request->product_id)->with( $status );
     }
 
     /**
@@ -111,7 +113,7 @@ class SalesController extends Controller
      */
     public function destroy($id)
     {
-        Sales::findOrFail($id)->delete();
+        Branch::findOrFail($id)->delete();
         
         $status = [
             'status' => 'danger',

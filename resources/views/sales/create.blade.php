@@ -50,7 +50,16 @@ Data Sales | Ubiku Dashboard
 										<input type="radio" name="gender" class="radio" id="r2" value="Perempuan">
 										<label for="r2">Perempuan</label>
 									</div>
-										
+                                </div>
+							</div>
+							<div class="form-group">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Produk</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="product_id">
+										@foreach($product_data AS $product)
+										<option value="{{$product->id}}">{{$product->name}}</option>
+										@endforeach
+									</select>
                                 </div>
 							</div>
 							

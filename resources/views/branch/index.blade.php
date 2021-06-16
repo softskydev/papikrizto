@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Stock | Ubiku Dashboard
+Data Cabang ({{$product}}) | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Stock | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Stock Product</h4>
+					<h4 class="box-title">Cabang</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -80,5 +80,5 @@ Data Stock | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/stock/stock.js') }}"></script>
+<script src="{{ url('js/product/product.js') }}"></script>
 @endsection

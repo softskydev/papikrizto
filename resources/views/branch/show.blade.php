@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Stock | Ubiku Dashboard
+Data Cabang ({{$product}}) | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Stock | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Stock Product</h4>
+					<h4 class="box-title">Data Cabang ({{$product}})</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -21,7 +21,7 @@ Data Stock | Ubiku Dashboard
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
-					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('stock.create') }}">
+					<a class="btn btn-xs btn-rounded btn-info " href="/branch/create/{{$product_id}}">
 						<i class="menu-icon fa fa-plus ">
 						</i> Add Data 
 					</a>
@@ -31,28 +31,24 @@ Data Stock | Ubiku Dashboard
 						<thead>
 							<tr>
 								<th>#</th>
-								<th width='35%'>Nama Produk</th>  
-								<th>Stok</th> 
-								<th>Satuan</th> 
-								<th>Harga per satuan</th>
+								<th width='35%'>Nama Cabang</th>  
+								<th>Username</th> 
 								<th>Action</th> 
 							</tr> 
 						</thead> 
 						<tbody> 
 						@php $no = 1; @endphp
-						@forelse ($data as $stock)
+						@forelse ($data as $branch)
 							<tr> 
 								<th scope="row">{{ $no++ }}</th> 
-								<td>{{$stock->product}}</td>
-								<td>{{$stock->stock}}</td>
-								<td>{{$stock->product_stock}}</td>
-								<td>{{$stock->price}}</td>
+								<td>{{$branch->name}}</td>
+								<td>{{$branch->username}}</td>
 								<td>
-									<a class="btn btn-xs btn-rounded btn-warning" href="{{ route('stock.show' , ['stock' => $stock->id ]) }}"> 
+									<a class="btn btn-xs btn-rounded btn-warning" href="/branch/edit/{{$branch->id}}"> 
 										<i class="menu-icon fa fa-pencil "> </i> Edit 
 									</a>
 									
-									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $stock->id }}')" > 
+									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $branch->id }}', '{{$product_id}}')" > 
 										<i class="menu-icon fa fa-trash "> </i> Hapus  
 									</button>
 								</td> 
@@ -80,5 +76,5 @@ Data Stock | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/stock/stock.js') }}"></script>
+<script src="{{ url('js/branch/branch.js') }}"></script>
 @endsection
