@@ -40,6 +40,8 @@ class BranchController extends Controller
         
         $branch = new Branch;
         $branch->name = $request->name;
+        $branch->branch_head = $request->branch_head;
+        $branch->branch_address = $request->branch_address;
         $branch->username = $request->username;
         $branch->password = md5($request->password);
         $branch->product_id = $request->product_id;
@@ -94,6 +96,8 @@ class BranchController extends Controller
         $branch = Branch::find($id);
         $branch->name = $request->name;
         $branch->username = $request->username;
+        $branch->branch_head = $request->branch_head;
+        $branch->branch_address = $request->branch_address;
         // if($request->password != "") $branch->password = md5($request->password);
         $branch->save();
 

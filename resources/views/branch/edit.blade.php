@@ -41,6 +41,18 @@ Data Cabang | Ubiku Dashboard
 										<input type="text" name="username" class="form-control" placeholder="Username" value="{{$detail->username}}">
 	                                </div>
 								</div>
+								<div class="form-group">
+									<label for="inp-type-1" class="col-sm-2 pull-left">Nama Kepala Cabang</label>
+									<div class="col-sm-10">
+										<input type="text" name="branch_head" class="form-control" placeholder="Nama Kepala Cabang" value="{{$detail->branch_head}}">
+	                                </div>
+								</div>
+								<div class="form-group">
+									<label for="inp-type-1" class="col-sm-2 pull-left">Alamat Cabang</label>
+									<div class="col-sm-10">
+										<textarea name="branch_address" class="form-control" placeholder="Alamat Cabang">{{$detail->branch_address}}</textarea>
+	                                </div>
+								</div>
 								{{-- <div class="form-group">
 									<label for="inp-type-1" class="col-sm-2 pull-left">Password</label>
 									<div class="col-sm-10">
