@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    public function __construct(){
+        $this->middleware('admin-middleware');
+    }
     /**
      * Display a listing of the resource.
      *

@@ -7,7 +7,9 @@ use App\ProductStock;
 
 class ProductStockController extends Controller
 {
-    
+    public function __construct(){
+        $this->middleware('admin-middleware');
+    }
     /**
      * Display a listing of the resource.
      *

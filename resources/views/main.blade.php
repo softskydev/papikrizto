@@ -79,9 +79,11 @@
 
 					<a class="waves-effect" href="{{ route('stock.index') }}"><i class="menu-icon ti-package"></i><span>Stocks</span></a>
 				</li>
-				<li>
+				{{-- <li>
 					<a class="waves-effect" href="{{ route('sales.index') }}"><i class="menu-icon ti-comments-smiley"></i><span>Sales</span></a>
-
+				</li> --}}
+				<li>
+					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-money"></i><span>Transaction</span></a>
 				</li>
 			</ul>
 		</div>

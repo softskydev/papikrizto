@@ -8,6 +8,9 @@ use App\Product;
 
 class ProductController extends Controller
 {
+    public function __construct(){
+        $this->middleware('admin-middleware');
+    }
     /**
      * Display a listing of the resource.
      *

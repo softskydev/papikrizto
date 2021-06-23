@@ -6,10 +6,14 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\ProductStock;
 use App\Stock;
+use App\StockHistory;
 use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
+    public function __construct(){
+        $this->middleware('admin-middleware');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -50,6 +54,12 @@ class StockController extends Controller
         $stock->price = $request->price;
         $stock->stock = $request->stock;
         $stock->save();
+
+        $stock_history = new StockHistory;
+        $stock_history->stock_id = $stock->id;
+        $stock_history->status = 'masuk';
+        $stock_history->quantity = $request->stock;
+        $stock_history->save();
 
         $status = [
             'status' => 'success',
@@ -103,6 +113,14 @@ class StockController extends Controller
         $stock->price = $request->price;
         $stock->stock = $request->stock;
         $stock->save();
+
+        StockHistory::where('stock_id', $id)->first()->delete();
+
+        $stock_history = new StockHistory;
+        $stock_history->stock_id = $stock->id;
+        $stock_history->status = 'masuk';
+        $stock_history->quantity = $request->stock;
+        $stock_history->save();
 
         $status = [
             'status' => 'info',

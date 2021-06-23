@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes();
+
+Route::get('/', 'LoginController@admin_index');
+Route::post('/login/process', 'LoginController@admin_process');
+
 Route::get('/dashboard' , 'DashboardController@index')->name('dashboard');
 
 // Route::get('/product' , 'ProductController@index')->name('product');
@@ -28,3 +32,8 @@ Route::resource('sales' , 'SalesController');
 Route::get('branch/create/{id}', 'BranchController@create');
 Route::get('branch/edit/{id}', 'BranchController@edit');
 Route::resource('branch' , 'BranchController', ['except' => ['create', 'edit']]);
+
+Route::resource('transaction', 'TransactionController');
+Route::get('transaction/json_price/{stock_id}', 'TransactionController@json_price');
+Route::get('transaction/json_stock/{product_id}', 'TransactionController@json_stock');
+Route::get('transaction/json_product/all', 'TransactionController@json_product');
