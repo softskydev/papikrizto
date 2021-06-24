@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+// ADMIN
+
 Route::get('/', 'LoginController@admin_index');
 Route::post('/login/process', 'LoginController@admin_process');
 
@@ -37,3 +39,10 @@ Route::resource('transaction', 'TransactionController');
 Route::get('transaction/json_price/{stock_id}', 'TransactionController@json_price');
 Route::get('transaction/json_stock/{product_id}', 'TransactionController@json_stock');
 Route::get('transaction/json_product/all', 'TransactionController@json_product');
+
+// BRANCH
+Route::get('/branch/login', 'LoginController@branch_index');
+Route::get('/branch/login/process', 'LoginController@branch_process');
+
+// Tes
+// Route::get('/tes/{product_stock_id}/{quantity}', 'TransactionController@get_true_stock');

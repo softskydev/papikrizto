@@ -11,6 +11,8 @@ use App\TransactionItem;
 use App\Stock;
 use App\StockHistory;
 use App\ProductStock;
+use App\BranchStock;
+use App\BranchStockHistory;
 
 class TransactionController extends Controller
 {
@@ -92,6 +94,29 @@ class TransactionController extends Controller
                 $stock = Stock::find($request['stock_id'.$i]);
                 $stock->stock -= $request['quantity'.$i];
                 $stock->save();
+
+                $branch_stock = new BranchStock;
+                $branch_stock->product_id = $request['product_id'.$i];
+                $branch_stock->branch_id = $request->branch_id;
+                $branch_stock->price = 0;
+
+                $product_stock_id = Stock::join('product_stocks','stocks.product_stock_id', '=', 'product_stocks.id')->select('product_stocks.id')->where('stocks.id', $request['stock_id'.$i])->first()->id;
+                $quantity = $request['quantity'.$i];
+
+                $ps = ProductStock::where('id', $product_stock_id)->first();
+                $parent_id = $ps->stock_id;
+                $peritem = $ps->peritem;
+                $true_stock = $quantity;
+                if ($parent_id != 0){
+                    while ($parent_id > 0) {
+                        $true_stock *= $peritem;
+                        $ps = ProductStock::where('id', $parent_id)->first();
+                        $parent_id = $ps->stock_id;
+                        $peritem = $ps->peritem;
+                    }
+                }
+                $branch_stock->stock = $true_stock;
+                $branch_stock->save();
             }
         }
 
@@ -152,23 +177,30 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        // $item = TransactionItem::where('transaction_id', $id)->get();
+        $item = TransactionItem::where('transaction_id', $id)->get();
 
-        // foreach ($item as $i) {
-        //     $s = Stock::where('id', $i->stock_id)->get();
+        foreach ($item as $i) {
+            $s = Stock::where('id', $i->stock_id)->first();
 
-        //     $stock = new Stock;
-        //     $stock->stock = $s->stock + $i->quantity;
-        // }
+            $stock = Stock::find($i->stock_id);
+            $stock->stock = $s->stock + $i->quantity;
+            $stock->save();
 
-        // // Transaction::findOrFail($id)->delete();
+            $stock_history = new StockHistory;
+            $stock_history->stock_id = $i->stock_id;
+            $stock_history->status = 'masuk';
+            $stock_history->quantity = $i->quantity;
+            $stock_history->save();
+        }
+
+        Transaction::findOrFail($id)->delete();
         
-        // $status = [
-        //     'status' => 'danger',
-        //     'msg' => 'Data berhasil di hapus'
-        // ];
+        $status = [
+            'status' => 'danger',
+            'msg' => 'Data berhasil di hapus'
+        ];
 
-        // echo json_encode($status);
+        echo json_encode($status);
     }
 
     public function json_price($stock_id){
@@ -186,4 +218,31 @@ class TransactionController extends Controller
 
         echo json_encode($product);
     }
+
+    // public function get_true_stock($product_stock_id, $quantity){
+    //     $ps = ProductStock::where('id', $product_stock_id)->first();
+    //     $parent_id = $ps->stock_id;
+    //     $peritem = $ps->peritem;
+    //     echo "Nama Stok : ".$ps->nama_stock."<br>";
+    //     echo "Per Item : ".$peritem."<br>";
+    //     echo "Parent ID : ".$parent_id."<br>";
+
+    //     $true_stock = $quantity;
+
+    //     if ($parent_id == 0) {
+    //         echo "True Stock = ".$true_stock." ".$ps->nama_stock;
+    //     }else{
+    //         while ($parent_id > 0) {
+    //             $true_stock *= $peritem;
+    //             $ps = ProductStock::where('id', $parent_id)->first();
+    //             $parent_id = $ps->stock_id;
+    //             $peritem = $ps->peritem;
+    //             echo "--------------------------<br>";
+    //             echo "Nama Stok : ".$ps->nama_stock."<br>";
+    //             echo "Per Item : ".$peritem."<br>";
+    //             echo "Parent ID : ".$parent_id."<br>";
+    //             echo "True Stock = ".$true_stock." ".$ps->nama_stock."<br>";
+    //         }
+    //     }
+    // }
 }

@@ -39,4 +39,11 @@ class LoginController extends Controller
     		return redirect('/dashboard');
     	}
     }
+
+    public function branch_index(){
+
+    }
+    public function branch_process(){
+        
+    }
 }
