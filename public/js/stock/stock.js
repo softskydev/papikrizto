@@ -27,3 +27,7 @@ function doDelete(id){
 
     
 }
+
+$(document).ready(function(){
+    $('.data-tables').DataTable();
+})

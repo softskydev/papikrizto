@@ -12,8 +12,7 @@ Data Sales | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Tambah Sales Baru</h4>
-                    <p> Tambahkan sales anda untuk dikelola </p>
+					<h4 class="box-title">Tambah Sales</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -25,7 +24,7 @@ Data Sales | Ubiku Dashboard
                     <hr>
 					<!-- /.dropdown js__dropdown -->
                     <div class="card-content">
-						<form class="form-horizontal" action="{{ route('sales.store') }}" method="POST">
+						<form class="form-horizontal" action="{{ route('sales.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Nama Sales</label>
@@ -34,9 +33,15 @@ Data Sales | Ubiku Dashboard
                                 </div>
 							</div>
 							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Tanggal Lahir</label>
+								<label for="inp-type-1" class="col-sm-2 pull-left">Email</label>
 								<div class="col-sm-10">
-									<input type="date" name="birth_day" class="form-control" id="inp-type-1" placeholder="Tanggal Lahir">
+									<input type="email" name="email" class="form-control" id="inp-type-1" placeholder="Email">
+                                </div>
+							</div>
+							<div class="form-group">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Telepon</label>
+								<div class="col-sm-10">
+									<input type="text" name="phone" class="form-control" id="inp-type-1" placeholder="Telepon">
                                 </div>
 							</div>
 							<div class="form-group">
@@ -53,14 +58,24 @@ Data Sales | Ubiku Dashboard
                                 </div>
 							</div>
 							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Produk</label>
+								<label for="inp-type-1" class="col-sm-2 pull-left">Scan KTP</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="product_id">
-										@foreach($product_data AS $product)
-										<option value="{{$product->id}}">{{$product->name}}</option>
+									<input type="file" name="ktp" class="form-control" id="inp-type-1">
+                                </div>
+							</div>
+							<div class="form-group">
+								@if(Session::get('branch_id') == 1)
+								<label for="inp-type-1" class="col-sm-2 pull-left">Cabang</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="branch_id">
+										@foreach($branch AS $b)
+										<option value="{{$b->id}}">{{$b->name}}</option>
 										@endforeach
 									</select>
                                 </div>
+                                @else
+                                <input type="hidden" name="branch_id" value="{{Session::get('branch_id')}}">
+                                @endif
 							</div>
 							
 							

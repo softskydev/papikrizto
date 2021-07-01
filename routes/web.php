@@ -15,34 +15,38 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-// ADMIN
-
+// Login
 Route::get('/', 'LoginController@admin_index');
 Route::post('/login/process', 'LoginController@admin_process');
+Route::redirect('/login', '/');
 
+// Dashboard
 Route::get('/dashboard' , 'DashboardController@index')->name('dashboard');
 
-// Route::get('/product' , 'ProductController@index')->name('product');
-// Route::get('/product/new' , 'ProductController@create')->name('productcreate');
-// Route::post('/product/store' , 'ProductController@store')->name('productstore');
+// Cabang
+Route::resource('branch' , 'BranchController');
+Route::resource('admin', 'AdminController');
+Route::resource('variant', 'ProductVariantController');
 
 Route::resource('product' , 'ProductController');
-Route::resource('product_stock' , 'ProductStockController');
-Route::resource('stock' , 'StockController');
-Route::resource('sales' , 'SalesController');
 
-Route::get('branch/create/{id}', 'BranchController@create');
-Route::get('branch/edit/{id}', 'BranchController@edit');
-Route::resource('branch' , 'BranchController', ['except' => ['create', 'edit']]);
+Route::resource('product_stock' , 'ProductStockController');
+
+Route::resource('stock' , 'StockController', ['except' => 'create']);
+Route::get('/stock/json_variant/{branch_id}', 'StockController@json_variant');
+Route::get('/stock/create/{variant_id}', [
+	'as' => 'stock.create',
+	'uses' => 'StockController@create'
+]);
+Route::get('/stock/detail/{variant_id}', 'StockController@detail');
+
+Route::resource('sales' , 'SalesController');
+Route::get('/sales/status/{id}/{status}', 'SalesController@set_status');
+
+Route::resource('variant', 'ProductVariantController');
+Route::get('/variant/status/{id}/{status}', 'ProductVariantController@set_status');
 
 Route::resource('transaction', 'TransactionController');
 Route::get('transaction/json_price/{stock_id}', 'TransactionController@json_price');
 Route::get('transaction/json_stock/{product_id}', 'TransactionController@json_stock');
 Route::get('transaction/json_product/all', 'TransactionController@json_product');
-
-// BRANCH
-Route::get('/branch/login', 'LoginController@branch_index');
-Route::get('/branch/login/process', 'LoginController@branch_process');
-
-// Tes
-// Route::get('/tes/{product_stock_id}/{quantity}', 'TransactionController@get_true_stock');

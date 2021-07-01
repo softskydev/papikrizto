@@ -13,7 +13,6 @@ Data Stok | Ubiku Dashboard
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
 					<h4 class="box-title">Tambah Stok</h4>
-                    <p> Tambahkan stok anda untuk dikelola </p>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -28,13 +27,16 @@ Data Stok | Ubiku Dashboard
 						<form class="form-horizontal" action="{{ route('stock.store') }}" method="POST">
                         @csrf
 							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Nama Produk Anda</label>
+								<label for="inp-type-1" class="col-sm-2 pull-left">Varian Produk</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="product_id">
-										@foreach($product_data AS $product)
-										<option value="{{$product->id}}">{{$product->name}}</option>
-										@endforeach
-									</select>
+									<input type="hidden" name="variant_id" value="{{$variant->id}}">
+									<input type="text" disabled="" readonly="" class="form-control" value="{{$variant->variant_name}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
+								<div class="col-sm-10">
+									<input type="number" name="stock" class="form-control" placeholder="Stok">
                                 </div>
 							</div>
 							<div class="form-group">
@@ -48,15 +50,9 @@ Data Stok | Ubiku Dashboard
                                 </div>
 							</div>
 							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Harga Satuan</label>
+								<label for="inp-type-1" class="col-sm-2 pull-left">Harga per Satuan</label>
 								<div class="col-sm-10">
 									<input type="number" name="price" class="form-control" placeholder="Harga Satuan">
-                                </div>
-							</div>
-							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
-								<div class="col-sm-10">
-									<input type="number" name="stock" class="form-control" placeholder="Stok">
                                 </div>
 							</div>
                             <hr>
@@ -85,4 +81,36 @@ Data Stok | Ubiku Dashboard
 	<!-- /.main-content -->
 </div><!--/#wrapper -->
 
+@endsection
+
+@section('js')
+<script type="text/javascript">
+	function set_variant(){
+		var branch_id = $('#branch').val();
+
+        $.ajax({
+            type: "GET", 
+            url: "/stock/json_variant/"+branch_id,
+            dataType: "json",
+            beforeSend: function(e) {
+              if(e && e.overrideMimeType) {
+                e.overrideMimeType("application/json;charset=UTF-8");
+              }
+            },
+            success: function(response){
+                $('#variant').empty();
+                $('#variant').append("<option value='0'>-Pilih Varian Produk-</option>");
+                $.each(response, function(i, variant){
+                    var html = "<option value='"+variant['id']+"'>"+variant['variant_name']+"</option>";
+                    $('#variant').append(html);
+                });
+
+                set_price(no);
+            },
+            error: function (xhr, ajaxOptions, thrownError) { 
+              alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+            }
+        });
+	}
+</script>
 @endsection

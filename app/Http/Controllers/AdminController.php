@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Admin;
 use App\Branch;
-use App\Product;
 
-class BranchController extends Controller
+class AdminController extends Controller
 {
     public function __construct(){
         $this->middleware('admin-middleware');
@@ -18,9 +18,10 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $branch['data'] = Branch::all();
-        
-        return view('branch.index' , $branch);   
+        $admin['data'] = Admin::all();
+        $admin['branch'] = Branch::all();
+
+        return view('admin.index' , $admin);
     }
 
     /**
@@ -28,10 +29,10 @@ class BranchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
-    {
-        $branch['product_id'] = $id;
-        return view('branch.create', $branch);
+    public function create()
+    {  
+        $admin['branch'] = Branch::all();
+        return view('admin.create' , $admin);
     }
 
     /**
@@ -42,23 +43,18 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $branch = new Branch;
-        $branch->name = $request->name;
-        $branch->branch_head = $request->branch_head;
-        $branch->branch_address = $request->branch_address;
-        $branch->username = $request->username;
-        $branch->password = md5($request->password);
-        $branch->product_id = $request->product_id;
-        $branch->save();
+        $admin = new Admin;
+        $admin->branch_id = $request->branch_id;
+        $admin->username = $request->username;
+        $admin->password = md5($request->password);
+        $admin->save();
 
         $status = [
-            'status' => 'success',
-            'msg' => 'Data berhasil di simpan'
+            'status' => 'info',
+            'msg' => 'Data berhasil di update'
         ];
 
-        return redirect()->route('branch.show', $request->product_id)->with( $status );
-
+        return redirect()->route('admin.index')->with( $status );
     }
 
     /**
@@ -69,9 +65,10 @@ class BranchController extends Controller
      */
     public function show($id)
     {
-        $branch['detail'] = Branch::where('id', $id)->first();
-        
-        return view('branch.edit' , $branch);
+        $admin['detail'] = Admin::where('id', $id)->first();
+        $admin['branch'] = Branch::all();
+
+        return view('admin.edit' , $admin);
     }
 
     /**
@@ -82,7 +79,7 @@ class BranchController extends Controller
      */
     public function edit($id)
     {
-        
+
     }
 
     /**
@@ -94,18 +91,17 @@ class BranchController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $branch = Branch::find($id);
-        $branch->name = $request->name;
-        $branch->branch_head = $request->branch_head;
-        $branch->branch_address = $request->branch_address;
-        $branch->save();
+        $admin = Admin::find($id);
+        $admin->username = $request->username;
+        $admin->branch_id = $request->branch_id;
+        $admin->save();
 
         $status = [
             'status' => 'info',
             'msg' => 'Data berhasil di update'
         ];
 
-        return redirect()->route('branch.index')->with( $status );
+        return redirect()->route('admin.index')->with( $status );
     }
 
     /**
@@ -116,7 +112,7 @@ class BranchController extends Controller
      */
     public function destroy($id)
     {
-        Branch::findOrFail($id)->delete();
+        ProductVariant::findOrFail($id)->delete();
         
         $status = [
             'status' => 'danger',

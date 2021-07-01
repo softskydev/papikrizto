@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Stok | Ubiku Dashboard
+Data Admin | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Stok | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Stok Produk</h4>
+					<h4 class="box-title">Admin</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -21,8 +21,10 @@ Data Stok | Ubiku Dashboard
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
-
-					<!-- /.dropdown js__dropdown -->
+					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('admin.create') }}">
+						<i class="menu-icon fa fa-plus ">
+						</i> Tambah Data 
+					</a>
 
 					<ul class="nav nav-tabs" id="myTabs" role="tablist" style="margin-top: 20px;">
 						@foreach($branch AS $b)
@@ -31,54 +33,48 @@ Data Stok | Ubiku Dashboard
 					</ul>
 					<!-- /.nav-tabs -->
 					<div class="tab-content" id="myTabContent">
-					@foreach($branch AS $b)
+						@foreach($branch AS $b)
 						<div class="tab-pane fade in {!!$b->id==1?'active':''!!}" role="tabpanel" id="tab{{$b->id}}" aria-labelledby="{{strtolower($b->name)}}-tab">
 							<!-- /.dropdown js__dropdown -->
 							<table class="table table-striped data-tables">
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Kode Produk</th>
-										<th width='40%'>Varian Produk</th>  
-										<th>Stok</th>
+										<th width='50%'>Username</th>
 										<th>Action</th> 
 									</tr> 
 								</thead> 
 								<tbody> 
 								@php $no = 1; @endphp
-								@forelse ($data as $stock)
-									@if($stock->branch_id == $b->id)
+								@forelse ($data as $admin)
+									@if($admin->branch_id == $b->id)
 									<tr> 
 										<th scope="row">{{ $no++ }}</th> 
-										<td>{{$stock->product_code}}</td>
-										<td>{{$stock->variant}}</td>
-										<td>{{$stock->total_stock}} Bungkus</td>
+										<td>{{$admin->username}}</td>
 										<td>
-											<a class="btn btn-xs btn-rounded btn-info" href="/stock/detail/{{$stock->variant_id}}"> 
-												<i class="menu-icon fa fa-eye "> </i> Detail Stok 
+											<a class="btn btn-xs btn-rounded btn-warning" href="/admin/{{$admin->id}}"> 
+												<i class="menu-icon fa fa-pencil "> </i> Edit 
 											</a>
-											<a href="{{ route('stock.create', $stock->variant_id) }}" class="btn btn-xs btn-rounded btn-primary"><i class="menu-icon fa fa-plus"></i> Tambah Stok</a>
+											
+											<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $admin->id }}')" > 
+												<i class="menu-icon fa fa-trash "> </i> Hapus  
+											</button>
 										</td> 
-									</tr>
+									</tr> 
 									@endif
 								@empty
 									<tr>
 										<td colspan="4" class="text-center">
-											Belum ada stok
+											Belum ada admin
 										</td>
 									</tr>
 								@endforelse 
 								</tbody> 
 							</table>
 						</div>
-					@endforeach
+						@endforeach
 					</div>
-
-					<table class="table table-striped">
-						
-						<tbody> 
-						
-					</table>
+					<!-- /.tab-content -->
 				</div>
 				<!-- /.box-content -->
 			</div>
@@ -93,5 +89,5 @@ Data Stok | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/stock/stock.js') }}"></script>
+<script src="{{ url('js/admin/admin.js') }}"></script>
 @endsection

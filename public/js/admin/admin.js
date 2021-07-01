@@ -12,18 +12,21 @@ function doDelete(id){
       }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url:  global_url + '/product/'+id,
+                url:  global_url + '/admin/'+id,
                 method: 'DELETE',
                 data: {
                     _token : token
                 },
                 dataType : 'json',
                 success:function(resp){
-                    window.location.href=global_url+'/product?&del_suc=1';
+                    window.location.href=global_url+'/admin?&del_suc=1';
                 }
             });
         }
     });
-
     
 }
+
+$(document).ready(function(){
+    $('.data-tables').DataTable();
+})

@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Sales | Ubiku Dashboard
+Data Varian Produk | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Sales | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Sales</h4>
+					<h4 class="box-title">Varian Produk</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -21,12 +21,10 @@ Data Sales | Ubiku Dashboard
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
-					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('sales.create') }}">
+					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('variant.create') }}">
 						<i class="menu-icon fa fa-plus ">
 						</i> Add Data 
 					</a>
-
-					<!-- /.dropdown js__dropdown -->
 
 					<ul class="nav nav-tabs" id="myTabs" role="tablist" style="margin-top: 20px;">
 						@php $tno = 1 @endphp
@@ -48,66 +46,50 @@ Data Sales | Ubiku Dashboard
 								<thead>
 									<tr>
 										<th>#</th>
-										<th>Nama Sales</th>
-										<th>Email</th>
-										<th>Telepon</th>
-										<th>Jenis Kelamin</th> 
+										<th width='40%'>Nama Varian</th>
 										<th>Status</th>
 										<th>Action</th> 
 									</tr> 
 								</thead> 
 								<tbody> 
 								@php $no = 1; @endphp
-								@forelse ($data as $sales)
-									@if($sales->branch_id == $b->id)
+								@forelse ($data as $variant)
+									@if($variant->branch_id == $b->id)
 									<tr> 
 										<th scope="row">{{ $no++ }}</th> 
-										<td>{{ $sales->name }}</td>
-										<td>{{ $sales->email }}</td>
-										<td>{{ $sales->phone }}</td>
-										<td>{{ $sales->gender }}</td>
-										<td>{{ ucfirst($sales->status) }}</td>
+										<td>{{$variant->variant_name}}</td>
+										<td>{{ucfirst($variant->status)}}</td>
 										<td>
-											<a class="btn btn-xs btn-rounded btn-warning" href="{{ route('sales.show' , $sales->id) }}"> 
-												<i class="menu-icon fa fa-pencil"> </i> Edit 
+											<a class="btn btn-xs btn-rounded btn-warning" href="/variant/{{$variant->id}}"> 
+												<i class="menu-icon fa fa-pencil "> </i> Edit 
 											</a>
 											
-											@if($sales->status=="aktif")
-											<a class="btn btn-xs btn-rounded btn-danger" href="/sales/status/{{$sales->id}}/nonaktif"> 
+											@if($variant->status=="aktif")
+											<a class="btn btn-xs btn-rounded btn-danger" href="/variant/status/{{$variant->id}}/nonaktif"> 
 												<i class="menu-icon fa fa-remove"> </i> Nonaktifkan  
 											</a>
 											@else
-											<a class="btn btn-xs btn-rounded btn-success" href="/sales/status/{{$sales->id}}/aktif"> 
+											<button class="btn btn-xs btn-rounded btn-success" href="/variant/status/{{$variant->id}}/nonaktif"> 
 												<i class="menu-icon fa fa-check"> </i> Aktifkan  
-											</a>
+											</button>
 											@endif
-
-											<button class="btn btn-xs btn-rounded btn-info" data-toggle="modal" data-target="#ktpmodal" onclick="change_ktp('{{$sales->ktp}}')"><i class="menu-icon fa fa-file-text"></i> Lihat KTP</button>
 										</td> 
-									</tr>
+									</tr> 
+									@php $tno++ @endphp
 									@endif
 								@empty
 									<tr>
 										<td colspan="4" class="text-center">
-											Belum ada Sales
+											Belum ada variant
 										</td>
 									</tr>
 								@endforelse 
 								</tbody> 
 							</table>
 						</div>
-						@php $tno++ @endphp
 						@endif
 						@endforeach
-						</div>
-
-					<table class="table table-striped data-tables">
-						
-						<tbody> 
-						@php $no = 1; @endphp
-						
-						</tbody> 
-					</table>
+					</div>
 				</div>
 				<!-- /.box-content -->
 			</div>
@@ -119,22 +101,8 @@ Data Sales | Ubiku Dashboard
 	</div>
 	<!-- /.main-content -->
 </div><!--/#wrapper -->
-
-<div class="modal fade" id="ktpmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Scan KTP</h4>
-			</div>
-			<div class="modal-body">
-				<img src="" id="ktpimg">
-			</div>
-		</div>
-	</div>
-</div>
 @endsection
 
 @section('js')
-<script src="{{ url('js/sales/sales.js') }}"></script>
+<script src="{{ url('js/variant/variant.js') }}"></script>
 @endsection

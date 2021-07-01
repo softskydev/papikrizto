@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 24, 2021 at 07:00 AM
+-- Generation Time: Jul 01, 2021 at 10:01 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.3
 
@@ -29,17 +29,23 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admins` (
-  `id_admin` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` text NOT NULL
+  `password` text NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `admins`
 --
 
-INSERT INTO `admins` (`id_admin`, `username`, `password`) VALUES
-(1, 'admin', '6eb6f861643e1dd0cd69a71f90428414');
+INSERT INTO `admins` (`id`, `username`, `password`, `branch_id`, `updated_at`, `created_at`) VALUES
+(1, 'admin', '6eb6f861643e1dd0cd69a71f90428414', 1, '2021-06-29 05:46:38', '0000-00-00 00:00:00'),
+(2, 'kopi', 'd6e631248c899248f50290423fa1e697', 4, '2021-06-28 22:46:49', '2021-06-28 22:46:49'),
+(3, 'pontren', '92eaf261c301b16e6b3b9ea568fe6bbb', 5, '2021-06-28 22:52:11', '2021-06-28 22:52:11'),
+(4, 'esa', '92eaf261c301b16e6b3b9ea568fe6bbb', 1, '2021-06-29 00:14:37', '2021-06-28 22:52:12');
 
 -- --------------------------------------------------------
 
@@ -53,8 +59,6 @@ CREATE TABLE `branches` (
   `branch_head` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `branch_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_id` int(11) NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -63,10 +67,10 @@ CREATE TABLE `branches` (
 -- Dumping data for table `branches`
 --
 
-INSERT INTO `branches` (`id`, `name`, `branch_head`, `branch_address`, `product_id`, `username`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'Cabang Nongkojajar', 'Es', 'Nongkojajar', 2, 'njir', '9466bef2d777a978f91a4fe19b11702d', '2021-06-15 23:42:47', '2021-06-17 21:10:17'),
-(4, 'Cabang Ketintang', '', '', 2, 'ktt', 'd972cb77ad08364211a0c7ecc6f7f28f', '2021-06-16 01:20:19', '2021-06-16 01:20:19'),
-(5, 'Cabang Lidah', 'Alfanfo', 'Lidah Wetan gang piro', 2, 'fandoal', 'f74e4339be40ffd3b2a263873e653be4', '2021-06-17 20:52:21', '2021-06-17 20:52:21');
+INSERT INTO `branches` (`id`, `name`, `branch_head`, `branch_address`, `product_id`, `created_at`, `updated_at`) VALUES
+(1, 'Ubiku', 'Esa', 'Taman Indah V', 2, '2021-06-15 23:42:47', '2021-06-30 03:45:13'),
+(4, 'Kopi Q', '-', '-', 2, '2021-06-16 01:20:19', '2021-06-28 20:14:39'),
+(5, 'Koppontren', '-', '-', 2, '2021-06-17 20:52:21', '2021-06-28 20:14:50');
 
 -- --------------------------------------------------------
 
@@ -83,13 +87,6 @@ CREATE TABLE `branch_stocks` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `branch_stocks`
---
-
-INSERT INTO `branch_stocks` (`id`, `product_id`, `branch_id`, `price`, `stock`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 0, 144, '2021-06-23 21:49:24', '2021-06-23 21:49:24');
 
 -- --------------------------------------------------------
 
@@ -187,15 +184,43 @@ INSERT INTO `product_stocks` (`id`, `nama_stock`, `stock_id`, `peritem`, `create
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_variants`
+--
+
+CREATE TABLE `product_variants` (
+  `id` int(11) NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `product_code` varchar(50) NOT NULL,
+  `variant_name` varchar(50) NOT NULL,
+  `status` enum('aktif','nonaktif') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `product_variants`
+--
+
+INSERT INTO `product_variants` (`id`, `branch_id`, `product_code`, `variant_name`, `status`, `created_at`, `updated_at`) VALUES
+(6, 1, 'UBI001', 'Ubiku rasa jagung bakar', 'aktif', '2021-06-30 21:07:42', '2021-06-30 21:07:42'),
+(7, 4, 'KQ001', 'Kopi Kapucino', 'aktif', '2021-06-30 21:08:23', '2021-06-30 21:08:23'),
+(8, 5, 'KP001', 'Kopi Santri', 'aktif', '2021-06-30 21:08:38', '2021-06-30 23:45:54');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sales`
 --
 
 CREATE TABLE `sales` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `birth_day` date NOT NULL,
   `gender` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ktp` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `branch_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -204,11 +229,13 @@ CREATE TABLE `sales` (
 -- Dumping data for table `sales`
 --
 
-INSERT INTO `sales` (`id`, `name`, `birth_day`, `gender`, `product_id`, `created_at`, `updated_at`) VALUES
-(1, 'Franata', '1980-06-12', 'Laki-laki', 0, '2021-06-14 20:24:41', '2021-06-14 20:24:41'),
-(2, 'Fando', '1974-06-16', 'Laki-Laki', 0, '2021-06-14 20:32:25', '2021-06-14 20:32:25'),
-(5, 'Hari Thanos', '1999-01-01', 'Laki-Laki', 0, '2021-06-14 20:37:22', '2021-06-14 20:38:03'),
-(6, 'Adit', '2021-06-15', 'Perempuan', 2, '2021-06-15 01:27:24', '2021-06-15 01:27:24');
+INSERT INTO `sales` (`id`, `name`, `gender`, `email`, `phone`, `ktp`, `status`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'Franata', 'Laki-Laki', 'nata@gmail.com', '082106150324', '20210701074233_franata.jpg', 'aktif', 1, '2021-06-14 20:24:41', '2021-07-01 00:42:33'),
+(2, 'Fando', 'Laki-Laki', 'fando@gmail.com', '082105214242', '20210701074012_fando.jpg', 'aktif', 4, '2021-06-14 20:32:25', '2021-07-01 00:40:12'),
+(5, 'Hari Thanos', 'Laki-Laki', 'thanos@gmail.com', '082125291292', '20210701073902_hari-thanos.jpg', 'aktif', 5, '2021-06-14 20:37:22', '2021-07-01 00:39:02'),
+(6, 'Adit', 'Perempuan', 'adit@gmail.com', '082157175901', '20210701074101_adit', 'aktif', 4, '2021-06-15 01:27:24', '2021-07-01 00:41:01'),
+(7, 'Cak Hasan', 'Laki-Laki', 'nurhasan@gmail.com', '081295210529', '20210701073957_cak-hasan.jpg', 'aktif', 1, '2021-06-29 21:20:07', '2021-07-01 00:39:57'),
+(8, 'Fando II', 'Perempuan', 'fando@gmail.com', '081275191299', '20210701072549_fando-ii.jpg', 'aktif', 5, '2021-07-01 00:25:49', '2021-07-01 00:25:49');
 
 -- --------------------------------------------------------
 
@@ -218,10 +245,11 @@ INSERT INTO `sales` (`id`, `name`, `birth_day`, `gender`, `product_id`, `created
 
 CREATE TABLE `stocks` (
   `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `variant_id` int(11) NOT NULL,
   `product_stock_id` int(11) NOT NULL,
   `price` float NOT NULL,
   `stock` int(11) NOT NULL,
+  `real_stock` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -230,11 +258,13 @@ CREATE TABLE `stocks` (
 -- Dumping data for table `stocks`
 --
 
-INSERT INTO `stocks` (`id`, `product_id`, `product_stock_id`, `price`, `stock`, `created_at`, `updated_at`) VALUES
-(5, 1, 1, 5000, 12, '2021-06-21 22:56:04', '2021-06-23 19:40:22'),
-(6, 2, 1, 7500, 12, '2021-06-21 22:56:28', '2021-06-23 19:40:22'),
-(8, 1, 3, 120000, 9, '2021-06-23 21:40:36', '2021-06-23 21:49:24'),
-(9, 2, 2, 50000, 12, '2021-06-23 21:40:54', '2021-06-23 21:40:54');
+INSERT INTO `stocks` (`id`, `variant_id`, `product_stock_id`, `price`, `stock`, `real_stock`, `created_at`, `updated_at`) VALUES
+(17, 6, 1, 0, 0, 0, '2021-06-30 21:07:42', '2021-06-30 21:07:42'),
+(18, 7, 1, 0, 0, 0, '2021-06-30 21:08:23', '2021-06-30 21:08:23'),
+(19, 8, 1, 0, 0, 0, '2021-06-30 21:08:38', '2021-06-30 21:08:38'),
+(20, 6, 3, 20000, 4, 192, '2021-06-30 21:41:51', '2021-06-30 23:40:02'),
+(22, 6, 2, 10000, 2, 48, '2021-06-30 23:40:22', '2021-06-30 23:40:22'),
+(23, 7, 2, 22000, 24, 576, '2021-06-30 23:41:59', '2021-06-30 23:41:59');
 
 -- --------------------------------------------------------
 
@@ -256,27 +286,10 @@ CREATE TABLE `stock_histories` (
 --
 
 INSERT INTO `stock_histories` (`id`, `stock_id`, `status`, `quantity`, `created_at`, `updated_at`) VALUES
-(3, 5, 'masuk', 12, '2021-06-21 23:00:29', '2021-06-21 23:00:29'),
-(4, 6, 'masuk', 12, '2021-06-21 23:00:39', '2021-06-21 23:00:39'),
-(19, 8, 'masuk', 12, '2021-06-23 21:40:36', '2021-06-23 21:40:36'),
-(20, 9, 'masuk', 12, '2021-06-23 21:40:54', '2021-06-23 21:40:54'),
-(22, 8, 'keluar', 3, '2021-06-23 21:47:03', '2021-06-23 21:47:03'),
-(23, 8, 'masuk', 3, '2021-06-23 21:47:29', '2021-06-23 21:47:29'),
-(24, 8, 'keluar', 3, '2021-06-23 21:47:49', '2021-06-23 21:47:49'),
-(25, 8, 'masuk', 3, '2021-06-23 21:49:02', '2021-06-23 21:49:02'),
-(26, 8, 'keluar', 3, '2021-06-23 21:49:23', '2021-06-23 21:49:23');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `table_sales`
---
-
-CREATE TABLE `table_sales` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(47, 21, 'masuk', 2, '2021-06-30 21:43:08', '2021-06-30 21:43:08'),
+(49, 20, 'masuk', 4, '2021-06-30 23:40:02', '2021-06-30 23:40:02'),
+(50, 22, 'masuk', 2, '2021-06-30 23:40:22', '2021-06-30 23:40:22'),
+(51, 23, 'masuk', 24, '2021-06-30 23:42:00', '2021-06-30 23:42:00');
 
 -- --------------------------------------------------------
 
@@ -287,19 +300,17 @@ CREATE TABLE `table_sales` (
 CREATE TABLE `transactions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `transaction_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_phone` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '-',
   `date` date NOT NULL,
+  `time` time NOT NULL,
   `branch_id` int(11) NOT NULL,
+  `sales_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `transaction_no`, `date`, `branch_id`, `total`, `created_at`, `updated_at`) VALUES
-(10, 'SO/0001', '2021-06-24', 1, 360000, '2021-06-23 21:49:23', '2021-06-23 21:49:23');
 
 -- --------------------------------------------------------
 
@@ -309,7 +320,7 @@ INSERT INTO `transactions` (`id`, `transaction_no`, `date`, `branch_id`, `total`
 
 CREATE TABLE `transaction_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `variant_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `stock_id` int(11) NOT NULL,
@@ -317,15 +328,6 @@ CREATE TABLE `transaction_items` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `transaction_items`
---
-
-INSERT INTO `transaction_items` (`id`, `product_id`, `quantity`, `total`, `stock_id`, `transaction_id`, `created_at`, `updated_at`) VALUES
-(14, 1, 3, 360000, 8, 8, '2021-06-23 21:47:03', '2021-06-23 21:47:03'),
-(15, 1, 3, 360000, 8, 9, '2021-06-23 21:47:49', '2021-06-23 21:47:49'),
-(16, 1, 3, 360000, 8, 10, '2021-06-23 21:49:23', '2021-06-23 21:49:23');
 
 -- --------------------------------------------------------
 
@@ -359,7 +361,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 -- Indexes for table `admins`
 --
 ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id_admin`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `branches`
@@ -404,6 +406,12 @@ ALTER TABLE `product_stocks`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `product_variants`
+--
+ALTER TABLE `product_variants`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `sales`
 --
 ALTER TABLE `sales`
@@ -419,12 +427,6 @@ ALTER TABLE `stocks`
 -- Indexes for table `stock_histories`
 --
 ALTER TABLE `stock_histories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `table_sales`
---
-ALTER TABLE `table_sales`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -447,7 +449,7 @@ ALTER TABLE `transaction_items`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `branches`
@@ -459,7 +461,7 @@ ALTER TABLE `branches`
 -- AUTO_INCREMENT for table `branch_stocks`
 --
 ALTER TABLE `branch_stocks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -471,43 +473,43 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `product_stocks`
 --
 ALTER TABLE `product_stocks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `product_variants`
+--
+ALTER TABLE `product_variants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `stocks`
 --
 ALTER TABLE `stocks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `stock_histories`
 --
 ALTER TABLE `stock_histories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-
---
--- AUTO_INCREMENT for table `table_sales`
---
-ALTER TABLE `table_sales`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `transaction_items`
 --
 ALTER TABLE `transaction_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

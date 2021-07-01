@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Sales;
+use App\Branch;
 use App\Product;
+use Str;
 
 class SalesController extends Controller
 {
@@ -19,6 +21,7 @@ class SalesController extends Controller
     public function index()
     {
         $sales['data'] = Sales::all();
+        $sales['branch'] = Branch::all();
         return view('sales.index' , $sales);
     }
 
@@ -30,6 +33,7 @@ class SalesController extends Controller
     public function create()
     {
         $sales['product_data'] = Product::all();
+        $sales['branch'] = Branch::all();
 
         return view('sales.create', $sales);
     }
@@ -42,12 +46,20 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
+        $file = $request->file('ktp');
+        $fileName = date('YmdHis').'_'.Str::slug($request->name).".jpg";
+
+        $target = 'ktp';
+        $file->move($target,$fileName);
         
         $sales = new Sales;
         $sales->name = $request->name;
-        $sales->birth_day = $request->birth_day;
+        $sales->email = $request->email;
+        $sales->phone = $request->phone;
         $sales->gender = $request->gender;
-        $sales->product_id = $request->product_id;
+        $sales->ktp = $fileName;
+        $sales->branch_id = $request->branch_id;
+        $sales->status = "aktif";
         $sales->save();
 
         $status = [
@@ -56,8 +68,6 @@ class SalesController extends Controller
         ];
 
         return redirect()->route('sales.index')->with( $status );
-
-
     }
 
     /**
@@ -68,8 +78,9 @@ class SalesController extends Controller
      */
     public function show($id)
     {
-        $sales = Sales::find($id);
-        return view('sales.edit' , ['detail'=> $sales]);
+        $sales['detail'] = Sales::find($id);
+        $sales['branch'] = Branch::all();
+        return view('sales.edit' , $sales);
     }
 
     /**
@@ -92,10 +103,23 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($request->ktp != null) {
+            $file = $request->file('ktp');
+            $fileName = date('YmdHis').'_'.Str::slug($request->name).".jpg";
+
+            $target = 'ktp';
+            $file->move($target,$fileName);
+        }else{
+            $fileName = Sales::where('id', $id)->first()->ktp;
+        }  
+
         $sales = Sales::find($id);
         $sales->name = $request->name;
-        $sales->birth_day = $request->birth_day;
+        $sales->email = $request->email;
+        $sales->phone = $request->phone;
         $sales->gender = $request->gender;
+        $sales->ktp = $fileName;
+        $sales->branch_id = $request->branch_id;
         $sales->save();
 
         $status = [
@@ -114,13 +138,28 @@ class SalesController extends Controller
      */
     public function destroy($id)
     {
-        Sales::findOrFail($id)->delete();
+        // Sales::findOrFail($id)->delete();
         
+        // $status = [
+        //     'status' => 'danger',
+        //     'msg' => 'Data berhasil di hapus'
+        // ];
+
+        // echo json_encode($status);
+    }
+
+    public function set_status($id, $status){
+        $sales = Sales::find($id);
+        $sales->status = $status;
+        $sales->save();
+
+        $msg = ($status=="aktif"?"diaktifkan kembali":"dinonaktifkan");
+
         $status = [
-            'status' => 'danger',
-            'msg' => 'Data berhasil di hapus'
+            'status' => 'info',
+            'msg' => 'Sales telah '.$msg
         ];
 
-        echo json_encode($status);
+        return redirect()->route('sales.index')->with( $status );
     }
 }

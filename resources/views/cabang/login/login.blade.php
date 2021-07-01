@@ -18,18 +18,18 @@
 <body>
 
 <div id="single-wrapper">
-	<form action="{{action('LoginController@admin_process')}}" class="frm-single" method="post">
+	<form action="{{action('LoginController@branch_process')}}" class="frm-single" method="post">
 		@csrf
 		<div class="inside">
-			<div class="title"><strong>Papikrizto</strong></div>
+			<div class="title"><strong>Papikristo</strong></div>
 			<!-- /.title -->
-			<div class="frm-title">Login Admin</div>
+			<div class="frm-title">Login Cabang</div>
 			<!-- /.frm-title -->
 			<div class="frm-input"><input type="text" placeholder="Username" name="username" class="frm-inp"><i class="fa fa-user frm-ico"></i></div>
 			<!-- /.frm-input -->
 			<div class="frm-input"><input type="password" placeholder="Password" name="password" class="frm-inp"><i class="fa fa-lock frm-ico"></i></div>
 			<!-- /.clearfix -->
-			<button type="submit" class="frm-submit">Login<i class="fa fa-arrow-circle-right"></i></button>
+			<button type="submit" class="frm-submit bg-success">Login<i class="fa fa-arrow-circle-right"></i></button>
 			<div class="frm-footer">NinjaAdmin © 2016.</div>
 			<!-- /.footer -->
 		</div>

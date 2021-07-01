@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Transaction | Ubiku Dashboard
+Data Transaksi | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,8 +12,7 @@ Data Transaction | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Tambah Transaction</h4>
-                    <p> Tambahkan transaction anda untuk dikelola </p>
+					<h4 class="box-title">Tambah Transaksi</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -27,33 +26,40 @@ Data Transaction | Ubiku Dashboard
                     <div class="card-content">
 						<form class="form-horizontal" action="{{ route('transaction.store') }}" method="POST">
                         @csrf
-                        	<div class="col-md-4">
-                        		<label>Cabang : </label>
-								<select class="form-control" name="branch_id" required="">
-									@foreach($branch AS $b)
-									<option value="{{$b->id}}">{{$b->name}}</option>
-									@endforeach
-								</select>
-                        	</div>
+                            <div class="col-md-6">
+                                <label>Sales : </label>
+                                <select class="form-control" name="sales_id" required="" id="sales">
+                                    @foreach($sales AS $s)
+                                    <option value="{{$s->id}}">{{$s->name}}</option>
+                                    @endforeach
+                                </select><br>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nama Customer : </label>
+                                <input type="text" class="form-control" name="customer_name" placeholder="Nama Customer" required=""><br>
+                            </div>
                         	<div class="col-md-4">
                         		<label>Nomor Transaksi : </label>
                                 <div class="input-group margin-bottom-20">
 									<div class="input-group-btn"><label for="ig-1" class="btn btn-default">SO/</label></div>
 									<!-- /.input-group-btn -->
-									<input id="ig-1" type="text" name="transaction_no" class="form-control" placeholder="Nomor Transaksi" value="{{$transaction_no}}" required="">
+									<input id="ig-1" type="number" name="transaction_no" class="form-control" placeholder="Nomor Transaksi" value="{{$transaction_no}}" required="">
 								</div>
                         	</div>
                         	<div class="col-md-4">
                         		<label>Tanggal Transaksi : </label>
 								<input type="date" class="form-control" name="date" placeholder="Tanggal Transaksi" required="">
                         	</div>
-                        	
+                        	<div class="col-md-4">
+                                <label>Jam Transaksi : </label>
+                                <input type="time" class="form-control" name="time" placeholder="Jam Transaksi" required="">
+                            </div>
                             <hr>
 
                             <table class="table">
                             	<thead>
                             		<tr>
-                            			<th width="19%">Produk</th>
+                            			<th width="19%">Varian Produk</th>
                             			<th width="19%">Stok</th>
                             			<th width="19%">Harga Satuan</th>
                             			<th width="19%">Kuantitas</th>
@@ -67,7 +73,7 @@ Data Transaction | Ubiku Dashboard
                             				<select name="product_id1" class="form-control" onchange="get_stock(1)">
                             					<option value="0">-Pilih Produk-</option>
                             					@foreach($product AS $p)
-                            					<option value="{{$p->id}}">{{$p->name}}</option>
+                            					<option value="{{$p->id}}">{{$p->variant_name}}</option>
                             					@endforeach
                             				</select>
                             			</td>

@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Transaksi | Ubiku Dashboard
+Data Cabang ({{$product}}) | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Transaksi | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Transaksi</h4>
+					<h4 class="box-title">Cabang</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -21,40 +21,38 @@ Data Transaksi | Ubiku Dashboard
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
-					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('transaction.create') }}">
+					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('stock.create') }}">
 						<i class="menu-icon fa fa-plus ">
 						</i> Add Data 
 					</a>
 
 					<!-- /.dropdown js__dropdown -->
-					<table class="table table-striped data-tables">
+					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>No.</th>
-								<th>No. Transaksi</th>
-								<th>Nama Sales</th>  
-								<th>Nama Customer</th>  
-								<th>Tanggal</th> 
-								<th>Total</th>
+								<th>#</th>
+								<th width='35%'>Nama Produk</th>  
+								<th>Stok</th> 
+								<th>Satuan</th> 
+								<th>Harga per satuan</th>
 								<th>Action</th> 
 							</tr> 
 						</thead> 
 						<tbody> 
 						@php $no = 1; @endphp
-						@forelse ($data as $transaction)
+						@forelse ($data as $stock)
 							<tr> 
 								<th scope="row">{{ $no++ }}</th> 
-								<td>{{$transaction->transaction_no}}</td>
-								<td>{{$transaction->sales}}</td>
-								<td>{{$transaction->customer_name}}</td>
-								<td>{{format($transaction->date)}}</td>
-								<td>{{rupiah($transaction->total)}}</td>
+								<td>{{$stock->product}}</td>
+								<td>{{$stock->stock}}</td>
+								<td>{{$stock->product_stock}}</td>
+								<td>{{$stock->price}}</td>
 								<td>
-									<a class="btn btn-xs btn-rounded btn-info" href="{{ route('transaction.show' , $transaction->id) }}"> 
-										<i class="menu-icon fa fa-pencil "> </i> Lihat Invoice 
+									<a class="btn btn-xs btn-rounded btn-warning" href="{{ route('stock.show' , ['stock' => $stock->id ]) }}"> 
+										<i class="menu-icon fa fa-pencil "> </i> Edit 
 									</a>
 									
-									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $transaction->id }}')" > 
+									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $stock->id }}')" > 
 										<i class="menu-icon fa fa-trash "> </i> Hapus  
 									</button>
 								</td> 
@@ -62,11 +60,11 @@ Data Transaksi | Ubiku Dashboard
 						@empty
 							<tr>
 								<td colspan="4" class="text-center">
-									Belum ada Transaksi
+									Belum ada Produk
 								</td>
 							</tr>
 						@endforelse 
-						</tbody>
+						</tbody> 
 					</table>
 				</div>
 				<!-- /.box-content -->
@@ -82,5 +80,5 @@ Data Transaksi | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/transaction/transaction.js') }}"></script>
+<script src="{{ url('js/product/product.js') }}"></script>
 @endsection

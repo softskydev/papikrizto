@@ -51,17 +51,12 @@
 		const global_url = '{{ url("") }}';
 		const token = '{{ csrf_token() }}';
 	</script>
-
-	{{-- Datatatable --}}
-	<link rel="stylesheet" href="{{url('app-assets/plugin/datatables/media/css/dataTables.bootstrap.min.css')}}">
-	<link rel="stylesheet" href="{{url('app-assets/plugin/datatables/extensions/Responsive/css/responsive.bootstrap.min.css')}}">
-
 </head>
 
 <body>
 <div class="main-menu">
 	<header class="header">
-		<a href="index.html" class="logo"><i class="ico ti-money"></i>Admin ({{Session::get('branch_name')}})</a>
+		<a href="index.html" class="logo"><i class="ico ti-rocket"></i>Cabang</a>
 		<button type="button" class="button-close fa fa-times js__menu_close"></button>
 	</header>
 	<!-- /.header -->
@@ -72,30 +67,13 @@
 			<!-- /.title -->
 			<ul class="menu js__accordion">
 				<li>
-					<a class="waves-effect" href="{{ url('/dashboard') }}"><i class="menu-icon ti-dashboard"></i><span>Dashboard</span></a>
-				</li>
-				@if(Session::get('branch_id') == 1)
-				<li>
-					<a class="waves-effect" href="{{ route('branch.index') }}"><i class="menu-icon ti-layout-grid2"></i><span>Cabang</span></a>
+					<a class="waves-effect" href="{{ url('/cabang/dashboard') }}"><i class="menu-icon ti-dashboard"></i><span>Dashboard</span></a>
 				</li>
 				<li>
-					<a class="waves-effect" href="{{ route('admin.index') }}"><i class="menu-icon ti-user"></i><span>Admin</span></a>
-				</li>
-                <li>
-					<a class="waves-effect" href="{{ route('product_stock.index') }}"><i class="menu-icon ti-import"></i><span>Product Satuan</span></a>
-				</li>
-				@endif
-				<li>
-					<a class="waves-effect" href="{{ route('variant.index') }}"><i class="menu-icon ti-gift"></i><span>Product Variant</span></a>
+					<a class="waves-effect" href="{{ route('product.index') }}"><i class="menu-icon ti-layout-grid2"></i><span>Product</span></a>
 				</li>
 				<li>
-					<a class="waves-effect" href="{{ route('stock.index') }}"><i class="menu-icon ti-package"></i><span>Stock</span></a>
-				</li>
-				<li>
-					<a class="waves-effect" href="{{ route('sales.index') }}"><i class="menu-icon ti-comments-smiley"></i><span>Sales</span></a>
-				</li>
-				<li>
-					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-money"></i><span>Transaksi</span></a>
+					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-money"></i><span>Transaction</span></a>
 				</li>
 			</ul>
 		</div>
@@ -130,6 +108,99 @@
 	<!-- /.pull-right -->
 </div>
 <!-- /.fixed-navbar -->
+
+<div id="notification-popup" class="notice-popup js__toggle" data-space="75">
+	<h2 class="popup-title">Your Notifications</h2>
+	<!-- /.popup-title -->
+	<div class="content">
+		<ul class="notice-list">
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
+					<span class="name">John Doe</span>
+					<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
+					<span class="time">10 min</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
+					<span class="name">Anna William</span>
+					<span class="desc">Like your post: “Facebook Messenger”</span>
+					<span class="time">15 min</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar bg-warning"><i class="fa fa-warning"></i></span>
+					<span class="name">Update Status</span>
+					<span class="desc">Failed to get available update data. To ensure the please contact us.</span>
+					<span class="time">30 min</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/128x128" alt=""></span>
+					<span class="name">Jennifer</span>
+					<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
+					<span class="time">45 min</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
+					<span class="name">Michael Zenaty</span>
+					<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
+					<span class="time">50 min</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
+					<span class="name">Simon</span>
+					<span class="desc">Like your post: “Facebook Messenger”</span>
+					<span class="time">1 hour</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar bg-violet"><i class="fa fa-flag"></i></span>
+					<span class="name">Account Contact Change</span>
+					<span class="desc">A contact detail associated with your account has been changed.</span>
+					<span class="time">2 hours</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
+					<span class="name">Helen 987</span>
+					<span class="desc">Like your post: “Facebook Messenger”</span>
+					<span class="time">Yesterday</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/128x128" alt=""></span>
+					<span class="name">Denise Jenny</span>
+					<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
+					<span class="time">Oct, 28</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
+					<span class="name">Thomas William</span>
+					<span class="desc">Like your post: “Facebook Messenger”</span>
+					<span class="time">Oct, 27</span>
+				</a>
+			</li>
+		</ul>
+		<!-- /.notice-list -->
+		<a href="#" class="notice-read-more">See more messages <i class="fa fa-angle-down"></i></a>
+	</div>
+	<!-- /.content -->
+</div>
+<!-- /#notification-popup -->
 
 <div id="message-popup" class="notice-popup js__toggle" data-space="75">
 	<h2 class="popup-title">Recent Messages<a href="#" class="pull-right text-danger">New message</a></h2>
@@ -255,13 +326,5 @@
 	<script src="{{ url('app-assets/scripts/fullcalendar.init.js') }}"></script>
 
 	<script src="{{ url('app-assets/scripts/main.min.js') }}"></script>
-
-	<!-- Data Tables -->
-	<script src="{{url('app-assets/plugin/datatables/media/js/jquery.dataTables.min.js')}}"></script>
-	<script src="{{url('app-assets/plugin/datatables/media/js/dataTables.bootstrap.min.js')}}"></script>
-	<script src="{{url('app-assets/plugin/datatables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
-	<script src="{{url('app-assets/plugin/datatables/extensions/Responsive/js/responsive.bootstrap.min.js')}}"></script>
-	{{-- <script src="{{url('app-assets/scripts/datatables.demo.min.js')}}"></script> --}}
-
 </body>
 </html>

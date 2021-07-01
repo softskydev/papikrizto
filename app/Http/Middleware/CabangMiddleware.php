@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Http\Middleware\Session;
+use Session;
 
 class CabangMiddleware
 {
@@ -16,8 +16,8 @@ class CabangMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Session::get('tipe') != "cabang") {
-            return redirect('cabang/login');
+        if (Session::get('tipe') != "cabang" || Session::get('tipe') != "admin") {
+            return redirect('cabang/');
         }else{
             return $next($request);
         }

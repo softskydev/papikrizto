@@ -1,7 +1,7 @@
-@extends('main')
+@extends('cabang.main')
 
 @section('title')
-Data Dashboard | Ubiku Dashboard
+Dashboard Cabang | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -13,7 +13,7 @@ Data Dashboard | Ubiku Dashboard
 					<div class="statistics-box with-icon">
 						<i class="ico ti-apple text-inverse"></i>
 						<h2 class="counter text-inverse">2561</h2>
-						<p class="text">Total Transaksi</p>
+						<p class="text">Product Sales</p>
 					</div>
 					<!-- .statistics-box .with-icon -->
 				</div>
@@ -31,8 +31,8 @@ Data Dashboard | Ubiku Dashboard
 
 				<div class="box-content">
 					<div class="statistics-box with-icon">
-						<i class="ico ti-user text-primary"></i>
-						<h2 class="counter text-primary">283</h2>
+						<i class="ico ti-user text-success"></i>
+						<h2 class="counter text-success">283</h2>
 						<p class="text">Members</p>
 					</div>
 					<!-- .statistics-box .with-icon -->
@@ -187,8 +187,8 @@ Data Dashboard | Ubiku Dashboard
 					<!-- /.dropdown js__dropdown -->
 					<div class="activity-list">
 						<div class="activity-item">
-							<div class="bar bg-primary">
-								<div class="dot bg-primary"></div>
+							<div class="bar bg-success">
+								<div class="dot bg-success"></div>
 								<!-- /.dot -->
 							</div>
 							<!-- /.bar -->

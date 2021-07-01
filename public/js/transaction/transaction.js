@@ -143,7 +143,7 @@ function add_product(){
                             +'<select name="product_id'+no+'" class="form-control" onchange="get_stock('+no+')">'
                                 +'<option value="0">-Pilih Produk-</option>';
             $.each(response, function(i, product){
-                html += "<option value='"+product['id']+"'>"+product['name']+"</option>";
+                html += "<option value='"+product['id']+"'>"+product['variant_name']+"</option>";
             });
             html += '</select>'
                         +'</td>'
@@ -191,3 +191,7 @@ function remove_product(no){
     $('#grandtotal').text(rp(grandtotal));
     $('#total').val(grandtotal);
 }
+
+$(document).ready(function(){
+    $('.data-tables').DataTable();
+})

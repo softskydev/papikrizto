@@ -27,11 +27,11 @@ Data Jenis Stock | Ubiku Dashboard
 					</a>
 
 					<!-- /.dropdown js__dropdown -->
-					<table class="table table-striped">
+					<table class="table table-striped data-tables">
 						<thead>
 							<tr>
 								<th>#</th>
-								<th width='70%'>Nama Produk</th> 
+								<th width='70%'>Nama Satuan</th> 
 								<th width='15%'>Stock Rangkap </th> 
 								<th width='15%'>Per Satuan</th> 
 								<th>Action</th> 
@@ -82,5 +82,5 @@ Data Jenis Stock | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/product/product.js') }}"></script>
+<script src="{{ url('js/product_stock/product_stock.js') }}"></script>
 @endsection

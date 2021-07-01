@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use App\ProductVariant;
 use App\ProductStock;
 use App\Stock;
 use App\StockHistory;
+use App\Branch;
 use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
@@ -21,9 +23,9 @@ class StockController extends Controller
      */
     public function index()
     {
-        $stock['data'] = Stock::join('products', 'products.id', '=', 'stocks.product_id')
-                            ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
-                            ->select('stocks.*', DB::raw('products.name AS product'), DB::raw('product_stocks.nama_stock AS product_stock'))->get();
+        $stock['data'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', DB::raw('SUM(stocks.real_stock) AS total_stock'))->groupBy('stocks.variant_id')->get();
+        $stock['branch'] = Branch::all();
         return view('stocks.index' , $stock);
     }
 
@@ -32,10 +34,10 @@ class StockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($variant_id)
     {
-        $stock['product_data'] = Product::all();
         $stock['product_stock_data'] = ProductStock::all();
+        $stock['variant'] = ProductVariant::where('id', $variant_id)->select('id', 'variant_name')->first();
         
         return view('stocks.create', $stock);
     }
@@ -49,10 +51,25 @@ class StockController extends Controller
     public function store(Request $request)
     {
         $stock = new Stock;
-        $stock->product_id = $request->product_id;
+        $stock->variant_id = $request->variant_id;
         $stock->product_stock_id = $request->product_stock_id;
         $stock->price = $request->price;
         $stock->stock = $request->stock;
+
+        $product_stock_id = $stock->product_stock_id;
+        $ps = ProductStock::where('id', $product_stock_id)->first();
+        $parent_id = $ps->stock_id;
+        $peritem = $ps->peritem;
+        $real_stock = $stock->stock;
+        if ($parent_id != 0){
+            while ($parent_id > 0) {
+                $real_stock *= $peritem;
+                $ps = ProductStock::where('id', $parent_id)->first();
+                $parent_id = $ps->stock_id;
+                $peritem = $ps->peritem;
+            }
+        }
+        $stock->real_stock = $real_stock;
         $stock->save();
 
         $stock_history = new StockHistory;
@@ -77,12 +94,12 @@ class StockController extends Controller
      */
     public function show($id)
     {
-        $stock['detail'] = Stock::join('products', 'products.id', '=', 'stocks.product_id')
-                            ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
-                            ->select('stocks.*', DB::raw('products.name AS product'), DB::raw('product_stocks.nama_stock AS product_stock'))->where("stocks.id", $id)->first();
+        $stock['detail'] = Stock::where('id', $id)->first();
+        $branch_id = $stock['detail']->branch_id;
 
-        $stock['product_data'] = Product::all();
         $stock['product_stock_data'] = ProductStock::all();
+        $stock['branch'] = Branch::all();
+        $stock['variant'] = ProductVariant::where('id', $stock['detail']->variant_id)->first();
 
         return view('stocks.edit', $stock);
     }
@@ -108,10 +125,26 @@ class StockController extends Controller
     public function update(Request $request, $id)
     {
         $stock = Stock::find($id);
-        $stock->product_id = $request->product_id;
+        $stock->variant_id = $request->variant_id;
         $stock->product_stock_id = $request->product_stock_id;
         $stock->price = $request->price;
         $stock->stock = $request->stock;
+
+        $product_stock_id = $stock->product_stock_id;
+        $ps = ProductStock::where('id', $product_stock_id)->first();
+        $parent_id = $ps->stock_id;
+        $peritem = $ps->peritem;
+        $real_stock = $stock->stock;
+        if ($parent_id != 0){
+            while ($parent_id > 0) {
+                $real_stock *= $peritem;
+                $ps = ProductStock::where('id', $parent_id)->first();
+                $parent_id = $ps->stock_id;
+                $peritem = $ps->peritem;
+            }
+        }
+        $stock->real_stock = $real_stock;
+
         $stock->save();
 
         StockHistory::where('stock_id', $id)->first()->delete();
@@ -146,5 +179,23 @@ class StockController extends Controller
         ];
 
         echo json_encode($status);
+    }
+
+    public function detail($variant_id){
+        $stock['detail'] = Stock::join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                    ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->where([
+                        ['stocks.variant_id','=', $variant_id],
+                        ['stocks.stock', '>', 0]
+                    ])
+                    ->select('stocks.*', 'product_variants.variant_name AS variant', 'product_stocks.nama_stock AS product_stock', 'product_variants.product_code')
+                    ->get();
+        return view('stocks.detail', $stock);
+    }
+
+    public function json_variant($branch_id){
+        $variant = ProductVariant::where('branch_id', $branch_id)->get();
+
+        echo json_encode($variant);
     }
 }

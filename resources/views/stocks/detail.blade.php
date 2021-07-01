@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Cabang | Ubiku Dashboard
+Data Stok | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Cabang | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Cabang</h4>
+					<h4 class="box-title">Detail Stok Produk</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -23,44 +23,49 @@ Data Cabang | Ubiku Dashboard
 					</div>
 
 					<!-- /.dropdown js__dropdown -->
-					<table class="table table-striped" id="example">
+
+					<table class="table table-striped data-tables">
 						<thead>
 							<tr>
 								<th>#</th>
-								<th width='25%'>Nama Cabang</th> 
-								<th width='25%'>Kepala Cabang</th> 
-								<th width='30%'>Alamat</th> 
+								<th>Kode Produk</th>  
+								<th width='40%'>Varian Produk</th>  
+								<th>Stok</th>
+								<th>Satuan</th>
 								<th>Action</th> 
 							</tr> 
 						</thead> 
 						<tbody> 
 						@php $no = 1; @endphp
-						@forelse ($data as $branch)
+						@forelse ($detail as $stock)
 							<tr> 
 								<th scope="row">{{ $no++ }}</th> 
-								<td>{{ $branch->name }}</td>
-								<td>{{ $branch->branch_head }}</td>
-								<td>{{ $branch->branch_address }}</td>
+								<td>{{$stock->product_code}}</td>
+								<td>{{$stock->variant}}</td>
+								<td>{{$stock->stock}}</td>
+								<td>{{$stock->product_stock}}</td>
 								<td>
-									<a class="btn btn-xs btn-rounded btn-primary" href="{{ route('branch.show', $branch->id) }}"> 
-										<i class="menu-icon fa fa-gear"> </i> Setting
+									<a class="btn btn-xs btn-rounded btn-warning" href="{{route('stock.show', $stock->id)}}"> 
+										<i class="menu-icon fa fa-edit "> </i> Edit Stok
 									</a>
-									{{-- <a class="btn btn-xs btn-rounded btn-info" href="/variant/{{$branch->id}}"> 
-										<i class="menu-icon fa fa-coffee"> </i> Varian
-									</a>
-									<a class="btn btn-xs btn-rounded btn-warning" href="/admin/{{$branch->id}}"> 
-										<i class="menu-icon fa fa-user"> </i> Admin
-									</a> --}}
+									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $stock->id }}')"><i class="menu-icon fa fa-trash"></i> Hapus Stok</button>
 								</td> 
-							</tr> 
+							</tr>
 						@empty
 							<tr>
 								<td colspan="4" class="text-center">
-									Belum ada Produk
+									Stok kosong
 								</td>
 							</tr>
 						@endforelse 
 						</tbody> 
+					</table>
+					</div>
+
+					<table class="table table-striped">
+						
+						<tbody> 
+						
 					</table>
 				</div>
 				<!-- /.box-content -->
@@ -76,5 +81,5 @@ Data Cabang | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/admin/admin.js') }}"></script>
+<script src="{{ url('js/stock/stock.js') }}"></script>
 @endsection

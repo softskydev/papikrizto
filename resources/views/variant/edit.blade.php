@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data stock | Ubiku Dashboard
+Data Varian Produk | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,49 +12,41 @@ Data stock | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Edit Stok Anda </h4>
-                    <p> Tambahkan stock anda untuk dikelola </p>
+					<h4 class="box-title">Edit Produk </h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
 						<ul class="sub-menu">
-							<li><a href="{{ route('stock.index') }}">Back</a></li>
+							<li><a href="{{ route('variant.index') }}">Back</a></li>
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
                     <hr>
 					<!-- /.dropdown js__dropdown -->
                     <div class="card-content">
-						<form class="form-horizontal" action="{{ route('stock.update' , $detail->id) }}" method="POST">
+						<form class="form-horizontal" action="{{ route('variant.update' , $detail->id) }}" method="POST">
                         @csrf
                             <input type="hidden" name='_method' value="PUT">
                             <div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Varian Produk</label>
+								<label for="inp-type-1" class="col-sm-2 pull-left">Kode Produk</label>
 								<div class="col-sm-10">
-									<input type="hidden" name="variant_id" value="{{$variant->id}}">
-									<input type="text" disabled="" readonly="" class="form-control" value="{{$variant->variant_name}}">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
-								<div class="col-sm-10">
-									<input type="number" name="stock" class="form-control" placeholder="Stok" value="{{$detail->stock}}">
+									<input type="text" name="product_code" class="form-control" placeholder="Kode Produk" required="" value="{{$detail->product_code}}">
                                 </div>
 							</div>
-							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Satuan Produk</label>
+                            <div class="form-group">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Cabang</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="product_stock_id">
-										@foreach($product_stock_data AS $product_stock)
-										<option value="{{$product_stock->id}}" {{$product_stock->id==$detail->product_stock_id?"selected":""}}>{{$product_stock->nama_stock}}</option>
+									<select class="form-control" name="branch_id">
+										@foreach($branch AS $b)
+										<option value="{{$b->id}}" {{$b->id==$detail->branch_id?"selected":""}}>{{$b->name}}</option>
 										@endforeach
 									</select>
                                 </div>
 							</div>
 							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Harga Satuan</label>
+								<label for="inp-type-1" class="col-sm-2 pull-left">Nama Varian</label>
 								<div class="col-sm-10">
-									<input type="number" name="price" class="form-control" placeholder="Harga Satuan" value="{{$detail->price}}">
+									<input type="text" name="variant_name" class="form-control" placeholder="Nama Varian" required="" value="{{$detail->variant_name}}">
                                 </div>
 							</div>
                             <hr>
@@ -63,7 +55,7 @@ Data stock | Ubiku Dashboard
                             </div>
                             <div class="col-md-6">
                                 <div class="pull-right">
-                                    <a class="btn btn-danger" type="button" href="{{ route('stock.index') }}"> Cancel </a>
+                                    <a class="btn btn-danger" type="button" href="{{ route('variant.index') }}"> Cancel </a>
                                     <button class="btn btn-success" type="submit"> Simpan </button>
                                 </div>
                             </div>
