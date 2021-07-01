@@ -23,7 +23,7 @@ class LoginController extends Controller
     		'password' => md5($req->password)
     	);
 
-    	$userdata = Admin::where($where)->first();
+    	$userdata = Admin::where($where)->select('admins.*','branches.name')->join('branches' ,'branches.id','=','admins.branch_id')->first();
     	$count = Admin::where($where)->count();
     	if ($count == 0) {
             $status = [
@@ -37,6 +37,7 @@ class LoginController extends Controller
     		Session::put('username', $userdata->username);
             Session::put('branch_id', $userdata->branch_id);
     		Session::put('tipe', 'admin');
+    		Session::put('name', $userdata->name);
 
             $branch_name = Branch::where('id', $userdata->branch_id)->first()->name;
 
