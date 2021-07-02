@@ -11,6 +11,7 @@ use App\Branch;
 use App\TransactionItem;
 use App\Stock;
 use App\Sales;
+use App\Customer;
 use App\StockHistory;
 use App\ProductStock;
 use App\BranchStock;
@@ -31,7 +32,8 @@ class TransactionController extends Controller
     {
         $transaction['data'] = Transaction::join('branches', 'transactions.branch_id', '=', 'branches.id')->select('transactions.*', 'branches.name')
                             ->join('sales', 'transactions.sales_id', '=', 'sales.id')
-                            ->select('transactions.*', DB::raw('sales.name AS sales'), DB::raw('branches.name AS branch'))
+                            ->join('customers', 'transactions.customer_id', '=', 'customers.id')
+                            ->select('transactions.*', DB::raw('sales.name AS sales'), DB::raw('branches.name AS branch'), DB::raw('customers.name AS customer_name'))
                             ->where('transactions.branch_id', Session::get('branch_id'))->get();
         return view('transaction.index', $transaction);
     }
@@ -80,23 +82,39 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+        $cust_name = $request->customer_name;
+        $cust_phone = $request->customer_phone;
+        $cust = Customer::where([
+            'name' => $cust_name,
+            'no_telp' => $cust_phone
+        ]);
+        if ($cust->count() == 0) {
+            $customer = new Customer;
+            $customer->name = $cust_name;
+            $customer->no_telp = $cust_phone;
+            $customer->save();
+            $customer_id = $customer->id;
+        }else{
+            $customer_id = $cust->first()->id;
+        }
+
         $transaction = new Transaction;
         $transaction->transaction_no = "SO/".$request->transaction_no;
         $transaction->branch_id = $request->branch_id;
         $transaction->total = $request->total;
         $transaction->date = $request->date;
         $transaction->time = $request->time;
-        $transaction->customer_name = $request->customer_name;
+        $transaction->customer_id = $customer_id;
         $transaction->sales_id = $request->sales_id;
         $transaction->admin_id = Session::get('id');
         $transaction->branch_id = Session::get('branch_id');
         $transaction->save();
 
         for ($i=1; $i < $request->count; $i++) { 
-            if ($request['product_id'.$i] != 0) {
+            if ($request['variant_id'.$i] != 0) {
                 $item = new TransactionItem;
                 $item->transaction_id = $transaction->id;
-                $item->variant_id = $request['product_id'.$i];
+                $item->variant_id = $request['variant_id'.$i];
                 $item->quantity = $request['quantity'.$i];
                 $item->total = $request['hidden_total'.$i];
                 $item->stock_id = $request['stock_id'.$i];
@@ -110,30 +128,23 @@ class TransactionController extends Controller
 
                 $stock = Stock::find($request['stock_id'.$i]);
                 $stock->stock -= $request['quantity'.$i];
-                $stock->save();
 
-                $branch_stock = new BranchStock;
-                $branch_stock->product_id = $request['product_id'.$i];
-                $branch_stock->branch_id = Session::get('branch_id');
-                $branch_stock->price = 0;
-
-                $product_stock_id = Stock::join('product_stocks','stocks.product_stock_id', '=', 'product_stocks.id')->select('product_stocks.id')->where('stocks.id', $request['stock_id'.$i])->first()->id;
-                $quantity = $request['quantity'.$i];
-
+                $product_stock_id = $request['product_stock_id'.$i];
                 $ps = ProductStock::where('id', $product_stock_id)->first();
                 $parent_id = $ps->stock_id;
                 $peritem = $ps->peritem;
-                $true_stock = $quantity;
+                $real_stock = $request['quantity'.$i];
                 if ($parent_id != 0){
                     while ($parent_id > 0) {
-                        $true_stock *= $peritem;
+                        $real_stock *= $peritem;
                         $ps = ProductStock::where('id', $parent_id)->first();
                         $parent_id = $ps->stock_id;
                         $peritem = $ps->peritem;
                     }
                 }
-                $branch_stock->stock = $true_stock;
-                $branch_stock->save();
+                $stock->real_stock -= $real_stock;
+
+                $stock->save();
             }
         }
 
@@ -142,7 +153,7 @@ class TransactionController extends Controller
             'msg' => 'Data berhasil di simpan'
         ];
 
-        return redirect()->route('transaction.index')->with( $status );
+        return redirect()->route('transaction.show', $transaction->id)->with( $status );
 
     }
 
@@ -154,7 +165,11 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        $transaction['detail'] = Transaction::join('branches', 'branches.id', '=', 'transactions.branch_id')->where('transactions.id', $id)->select('transactions.*', DB::raw('branches.name AS branch'))->first();
+        $transaction['detail'] = Transaction::join('branches', 'branches.id', '=', 'transactions.branch_id')
+                        ->join('customers', 'customers.id', '=', 'transactions.customer_id')
+                        ->where('transactions.id', $id)
+                        ->select('transactions.*', DB::raw('branches.name AS branch'), DB::raw('customers.name AS cust_name'), DB::raw('customers.no_telp AS cust_phone'))
+                        ->first();
         $transaction['item'] = TransactionItem::join('product_variants', 'product_variants.id', '=', 'transaction_items.variant_id')
                                 ->join('stocks', [
                                     ['stocks.variant_id', '=', 'product_variants.id'],
@@ -226,12 +241,18 @@ class TransactionController extends Controller
     }
 
     public function json_price($stock_id){
-        $price = Stock::where('id', $stock_id)->first()->price;
+        $stock['price'] = Stock::where('id', $stock_id)->first()->price;
+        $stock['stock'] = Stock::where('id', $stock_id)->first()->stock;
 
-        echo json_encode($price);
+        echo json_encode($stock);
     }
-    public function json_stock($product_id){
-        $stock = Stock::join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')->where('variant_id', $product_id)->select('stocks.*', 'product_stocks.nama_stock')->get();
+    public function json_stock($variant_id, $product_stock_id){
+        $stock = Stock::join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                ->where([
+                    ['variant_id', '=', $variant_id],
+                    ['product_stock_id', '=', $product_stock_id],
+                    ['stocks.stock', '>', 0]
+                ])->select('stocks.*', 'product_stocks.nama_stock')->get();
 
         echo json_encode($stock);
     }
@@ -240,5 +261,35 @@ class TransactionController extends Controller
         $product = ProductVariant::where('branch_id', $branch_id)->get();
 
         echo json_encode($product);
+    }
+    public function json_product_stock($variant_id){
+        $product_stock = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                        ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                        ->select('product_stocks.*')
+                        ->groupBy('product_stocks.id')
+                        ->where([
+                            ['stocks.variant_id', '=', $variant_id],
+                            ['stocks.stock', '>', 0]
+                        ])
+                        ->get();
+        echo json_encode($product_stock);
+    }
+    public function print(){
+        $transaction['detail'] = Transaction::join('branches', 'branches.id', '=', 'transactions.branch_id')
+                        ->join('customers', 'customers.id', '=', 'transactions.customer_id')
+                        ->where('transactions.id', $id)
+                        ->select('transactions.*', DB::raw('branches.name AS branch'), DB::raw('customers.name AS cust_name'), DB::raw('customers.no_telp AS cust_phone'))
+                        ->first();
+        $transaction['item'] = TransactionItem::join('product_variants', 'product_variants.id', '=', 'transaction_items.variant_id')
+                                ->join('stocks', [
+                                    ['stocks.variant_id', '=', 'product_variants.id'],
+                                    ['transaction_items.stock_id', '=', 'stocks.id']
+                                ])
+                                ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                                ->where('transaction_id', $id)->select('product_variants.*', 'transaction_items.*', 'product_stocks.*')->get();
+
+        // echo json_encode($transaction['item']);
+
+        return view('transaction.print', $transaction);
     }
 }

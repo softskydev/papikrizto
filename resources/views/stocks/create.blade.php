@@ -36,7 +36,7 @@ Data Stok | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
 								<div class="col-sm-10">
-									<input type="number" name="stock" class="form-control" placeholder="Stok">
+									<input type="number" name="stock" class="form-control" placeholder="Stok" required="">
                                 </div>
 							</div>
 							<div class="form-group">
@@ -52,7 +52,7 @@ Data Stok | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Harga per Satuan</label>
 								<div class="col-sm-10">
-									<input type="number" name="price" class="form-control" placeholder="Harga Satuan">
+									<input type="number" name="price" class="form-control" placeholder="Harga Satuan" required="">
                                 </div>
 							</div>
                             <hr>

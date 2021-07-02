@@ -55,9 +55,7 @@
 	{{-- Datatatable --}}
 	<link rel="stylesheet" href="{{url('app-assets/plugin/datatables/media/css/dataTables.bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{url('app-assets/plugin/datatables/extensions/Responsive/css/responsive.bootstrap.min.css')}}">
-
 </head>
-
 <body>
 <div class="main-menu">
 	<header class="header">

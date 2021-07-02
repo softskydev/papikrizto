@@ -48,12 +48,13 @@ function rp(angka){
 }
 
 function get_stock(no){
-    var product_id = $('select[name=product_id'+no+']').val();
+    var product_id = $('select[name=variant_id'+no+']').val();
+    var product_stock_id = $('select[name=product_stock_id'+no+']').val();
 
     if (product_id != 0) {
         $.ajax({
             type: "GET", 
-            url: "/transaction/json_stock/"+product_id,
+            url: "/transaction/json_stock/"+product_id+"/"+product_stock_id,
             dataType: "json",
             beforeSend: function(e) {
               if(e && e.overrideMimeType) {
@@ -76,6 +77,34 @@ function get_stock(no){
         });
     }
 }
+function get_product_stock(no){
+    var product_id = $('select[name=variant_id'+no+']').val();
+
+    if (product_id != 0) {
+        $.ajax({
+            type: "GET", 
+            url: "/transaction/json_product_stock/"+product_id,
+            dataType: "json",
+            beforeSend: function(e) {
+              if(e && e.overrideMimeType) {
+                e.overrideMimeType("application/json;charset=UTF-8");
+              }
+            },
+            success: function(response){
+                $('select[name=product_stock_id'+no+']').empty();
+                $('select[name=product_stock_id'+no+']').append("<option value='0'>-Pilih Satuan-</option>");
+                $.each(response, function(i, product_stock){
+                    var html = "<option value='"+product_stock['id']+"'>"+product_stock['nama_stock']+"</option>";
+                    $('select[name=product_stock_id'+no+']').append(html);
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) { 
+              alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+            }
+        });
+    }
+}
+
 
 function set_price(no){
     var stock_id = $('select[name=stock_id'+no+']').val();
@@ -92,9 +121,11 @@ function set_price(no){
               }
             },
             success: function(response){
-                $('#price'+no).val(response);
+                $('input[name=quantity'+no+']').attr('max', response['stock']);
 
-                total = qty * response;
+                $('#price'+no).val(response['price']);
+
+                total = qty * response['price'];
 
                 $('input[name=total'+no+']').val(rp(total));
                 $('input[name=hidden_total'+no+']').val(total);

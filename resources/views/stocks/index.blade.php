@@ -52,12 +52,17 @@ Data Stok | Ubiku Dashboard
 										<th scope="row">{{ $no++ }}</th> 
 										<td>{{$stock->product_code}}</td>
 										<td>{{$stock->variant}}</td>
-										<td>{{$stock->total_stock}} Bungkus</td>
+										<td>
+											@foreach($stocks AS $s)
+												@if($s->variant_id == $stock->variant_id)
+												<b>{{$s->stock}}</b> {{$s->nama_stock}}<br>
+												@endif
+											@endforeach
+										</td>
 										<td>
 											<a class="btn btn-xs btn-rounded btn-info" href="/stock/detail/{{$stock->variant_id}}"> 
 												<i class="menu-icon fa fa-eye "> </i> Detail Stok 
 											</a>
-											<a href="{{ route('stock.create', $stock->variant_id) }}" class="btn btn-xs btn-rounded btn-primary"><i class="menu-icon fa fa-plus"></i> Tambah Stok</a>
 										</td> 
 									</tr>
 									@endif

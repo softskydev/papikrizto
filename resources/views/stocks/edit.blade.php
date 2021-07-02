@@ -44,7 +44,8 @@ Data stock | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Satuan Produk</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="product_stock_id">
+									<input type="hidden" name="product_stock_id" value="{{$detail->product_stock_id}}">
+									<select class="form-control" disabled="">
 										@foreach($product_stock_data AS $product_stock)
 										<option value="{{$product_stock->id}}" {{$product_stock->id==$detail->product_stock_id?"selected":""}}>{{$product_stock->nama_stock}}</option>
 										@endforeach

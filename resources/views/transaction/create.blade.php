@@ -26,7 +26,7 @@ Data Transaksi | Ubiku Dashboard
                     <div class="card-content">
 						<form class="form-horizontal" action="{{ route('transaction.store') }}" method="POST">
                         @csrf
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Sales : </label>
                                 <select class="form-control" name="sales_id" required="" id="sales">
                                     @foreach($sales AS $s)
@@ -34,9 +34,13 @@ Data Transaksi | Ubiku Dashboard
                                     @endforeach
                                 </select><br>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Nama Customer : </label>
                                 <input type="text" class="form-control" name="customer_name" placeholder="Nama Customer" required=""><br>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Nomor Telepon Customer : </label>
+                                <input type="text" class="form-control" name="customer_phone" placeholder="Telepon Customer" required=""><br>
                             </div>
                         	<div class="col-md-4">
                         		<label>Nomor Transaksi : </label>
@@ -59,24 +63,30 @@ Data Transaksi | Ubiku Dashboard
                             <table class="table">
                             	<thead>
                             		<tr>
-                            			<th width="19%">Varian Produk</th>
-                            			<th width="19%">Stok</th>
-                            			<th width="19%">Harga Satuan</th>
-                            			<th width="19%">Kuantitas</th>
-                            			<th width="19%">Total</th>
-                            			<th width="5%"></th>
+                            			<th>Varian Produk</th>
+                            			<th width="17%">Satuan</th>
+                                        <th width="17%">Stok</th>
+                            			<th>Harga Satuan</th>
+                            			<th>Kuantitas</th>
+                            			<th width="15%">Total</th>
+                            			<th width="4%"></th>
                             		</tr>
                             	</thead>
                             	<tbody id="tbody">
                             		<tr id="tr1">
                             			<td>
-                            				<select name="product_id1" class="form-control" onchange="get_stock(1)">
-                            					<option value="0">-Pilih Produk-</option>
+                            				<select name="variant_id1" class="form-control" onchange="get_product_stock(1)">
+                            					<option value="0">-Pilih Varian Produk-</option>
                             					@foreach($product AS $p)
                             					<option value="{{$p->id}}">{{$p->variant_name}}</option>
                             					@endforeach
                             				</select>
                             			</td>
+                                        <td>
+                                            <select name="product_stock_id1" class="form-control" onchange="get_stock(1)">
+                                                
+                                            </select>
+                                        </td>
                             			<td>
                             				<select name="stock_id1" class="form-control" onchange="set_price(1)">
                         						
@@ -102,7 +112,7 @@ Data Transaksi | Ubiku Dashboard
 										<input type="hidden" name="count" id="count" value="2">
 										<input type="hidden" name="total" id="total">
 										<th><a onclick="add_product()" class="btn btn-primary">Tambah Produk</a></th>
-										<th colspan="3"><h4 class="text-right">Total :</h4></th>
+										<th colspan="4"><h4 class="text-right">Total :</h4></th>
 										<th><h4 id="grandtotal">Rp. 0</h4></th>
 									</tr>
 								</tfoot>
