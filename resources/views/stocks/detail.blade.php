@@ -13,6 +13,12 @@ Data Stok | Ubiku Dashboard
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
 					<h4 class="box-title">Detail Stok Produk</h4>
+
+					<a href="{{ route('stock.index') }}" class="btn btn-xs btn-rounded btn-default"><i class="menu-icon fa fa-chevron-left"></i> Kembali</a>
+					<a href="{{ route('stock.create', $variant_id) }}" class="btn btn-xs btn-rounded btn-primary"><i class="menu-icon fa fa-plus"></i> Tambah Stok</a>
+
+					<hr>
+
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -29,7 +35,8 @@ Data Stok | Ubiku Dashboard
 							<tr>
 								<th>#</th>
 								<th>Kode Produk</th>  
-								<th width='40%'>Varian Produk</th>  
+								<th width='30%'>Varian Produk</th>
+								<th>Harga Satuan</th>
 								<th>Stok</th>
 								<th>Satuan</th>
 								<th>Action</th> 
@@ -42,6 +49,7 @@ Data Stok | Ubiku Dashboard
 								<th scope="row">{{ $no++ }}</th> 
 								<td>{{$stock->product_code}}</td>
 								<td>{{$stock->variant}}</td>
+								<td>{{rupiah($stock->price)}}</td>
 								<td>{{$stock->stock}}</td>
 								<td>{{$stock->product_stock}}</td>
 								<td>

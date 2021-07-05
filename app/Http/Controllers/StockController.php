@@ -24,8 +24,13 @@ class StockController extends Controller
     public function index()
     {
         $stock['data'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
-                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', DB::raw('SUM(stocks.real_stock) AS total_stock'))->groupBy('stocks.variant_id')->get();
+                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code')->groupBy('stocks.variant_id')->get();
         $stock['branch'] = Branch::all();
+        $stock['stocks'] = Stock::join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                            ->groupBy('stocks.product_stock_id', 'stocks.variant_id')
+                            ->select('product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'), 'stocks.variant_id')
+                            ->where('stock', '>', 0)
+                            ->get();
         return view('stocks.index' , $stock);
     }
 
@@ -83,7 +88,7 @@ class StockController extends Controller
             'msg' => 'Data berhasil di simpan'
         ];
 
-        return redirect()->route('stock.index')->with( $status );
+        return redirect('stock/detail/'.$request->variant_id)->with( $status );
     }
 
     /**
@@ -160,7 +165,7 @@ class StockController extends Controller
             'msg' => 'Data berhasil di update'
         ];
 
-        return redirect()->route('stock.index')->with( $status );
+        return redirect('stock/detail/'.$request->variant_id)->with( $status );
     }
 
     /**
@@ -190,6 +195,7 @@ class StockController extends Controller
                     ])
                     ->select('stocks.*', 'product_variants.variant_name AS variant', 'product_stocks.nama_stock AS product_stock', 'product_variants.product_code')
                     ->get();
+        $stock['variant_id'] = $variant_id;
         return view('stocks.detail', $stock);
     }
 
