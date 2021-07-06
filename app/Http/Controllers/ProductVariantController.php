@@ -54,12 +54,10 @@ class ProductVariantController extends Controller
 
         $stock = new Stock;
         $stock->variant_id = $variant->id;
-        $stock->branch_id = $request->branch_id;
         $stock->product_stock_id = 1;
         $stock->price = 0;
         $stock->stock = 0;
         $stock->real_stock = 0;
-        $stock->minimum_stock = 0;
         $stock->save();
 
         $status = [
