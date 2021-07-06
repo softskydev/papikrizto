@@ -171,12 +171,17 @@ function add_product(){
         success: function(response){
             var html = '<tr id="tr'+no+'">'
                         +'<td>'
-                            +'<select name="product_id'+no+'" class="form-control" onchange="get_stock('+no+')">'
-                                +'<option value="0">-Pilih Produk-</option>';
+                            +'<select name="variant_id'+no+'" class="form-control" onchange="get_product_stock('+no+')">'
+                                +'<option value="0">-Pilih Varian Produk-</option>';
             $.each(response, function(i, product){
                 html += "<option value='"+product['id']+"'>"+product['variant_name']+"</option>";
             });
             html += '</select>'
+                        +'</td>'
+                        +'<td>'
+                            +'<select name="product_stock_id'+no+'" class="form-control" onchange="get_stock('+no+')">'
+                                                
+                            +'</select>'
                         +'</td>'
                         +'<td>'
                             +'<select name="stock_id'+no+'" class="form-control" onchange="set_price('+no+')">'
