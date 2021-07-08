@@ -93,9 +93,21 @@
 					<a class="waves-effect" href="{{ route('sales.index') }}"><i class="menu-icon ti-comments-smiley"></i><span>Sales</span></a>
 				</li>
 				<li>
-					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-money"></i><span>Transaksi</span></a>
+					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-receipt"></i><span>Transaksi</span></a>
 				</li>
+				@if(Session::get('branch_id'))
+				<li>
+					<a class="waves-effect parent-item js__control" href="#"><i class="menu-icon ti-money"></i><span>Finance</span><span class="menu-arrow fa fa-angle-down"></span></a>
+					<ul class="sub-menu js__content">
+						<li><a href="{{route('account.index')}}">Akun</a></li>
+						<li><a href="{{route('asset.index')}}">Aset</a></li>
+						<li><a href="{{route('hutangpiutang.index')}}">Hutang/Piutang</a></li>
+					</ul>
+					<!-- /.sub-menu js__content -->
+				</li>
+				@endif
 			</ul>
+			<div style="margin-top: 40px;"></div>
 		</div>
 		<!-- /.navigation -->
 	</div>
