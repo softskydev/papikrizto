@@ -51,3 +51,5 @@ Route::get('transaction/json_price/{stock_id}', 'TransactionController@json_pric
 Route::get('transaction/json_stock/{variant_id}/{product_stock_id}', 'TransactionController@json_stock');
 Route::get('transaction/json_product_stock/{variant_id}', 'TransactionController@json_product_stock');
 Route::get('transaction/json_product/all', 'TransactionController@json_product');
+
+Route::resource('request', 'StockRequestController');

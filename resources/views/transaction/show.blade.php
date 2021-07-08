@@ -21,10 +21,10 @@ Data Transaksi | Ubiku Dashboard
 					<tr class="top">
 						<td>
 							<table>
-								<tr>									
+								<tr>								
 									<td>Nomor Transaksi</td>
 									<td>:</td>
-									<td><b>#{{$detail->transaction_no}}</b></td>
+									<td><b>{{$detail->transaction_no}}</b></td>
 								</tr>
 								<tr>
 									<td>Customer</td>

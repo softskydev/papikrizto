@@ -9,6 +9,9 @@ use App\ProductStock;
 use App\Stock;
 use App\StockHistory;
 use App\Branch;
+use App\StockRequest;
+use App\Notification;
+use Session;
 use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
@@ -55,33 +58,53 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        $stock = new Stock;
-        $stock->variant_id = $request->variant_id;
-        $stock->product_stock_id = $request->product_stock_id;
-        $stock->price = $request->price;
-        $stock->stock = $request->stock;
+        if (Session::get('branch_id') == 1) {
+            $stock = new Stock;
+            $stock->variant_id = $request->variant_id;
+            $stock->product_stock_id = $request->product_stock_id;
+            $stock->price = $request->price;
+            $stock->stock = $request->stock;
 
-        $product_stock_id = $stock->product_stock_id;
-        $ps = ProductStock::where('id', $product_stock_id)->first();
-        $parent_id = $ps->stock_id;
-        $peritem = $ps->peritem;
-        $real_stock = $stock->stock;
-        if ($parent_id != 0){
-            while ($parent_id > 0) {
-                $real_stock *= $peritem;
-                $ps = ProductStock::where('id', $parent_id)->first();
-                $parent_id = $ps->stock_id;
-                $peritem = $ps->peritem;
+            $product_stock_id = $stock->product_stock_id;
+            $ps = ProductStock::where('id', $product_stock_id)->first();
+            $parent_id = $ps->stock_id;
+            $peritem = $ps->peritem;
+            $real_stock = $stock->stock;
+            if ($parent_id != 0){
+                while ($parent_id > 0) {
+                    $real_stock *= $peritem;
+                    $ps = ProductStock::where('id', $parent_id)->first();
+                    $parent_id = $ps->stock_id;
+                    $peritem = $ps->peritem;
+                }
             }
-        }
-        $stock->real_stock = $real_stock;
-        $stock->save();
+            $stock->real_stock = $real_stock;
+            $stock->save();
 
-        $stock_history = new StockHistory;
-        $stock_history->stock_id = $stock->id;
-        $stock_history->status = 'masuk';
-        $stock_history->quantity = $request->stock;
-        $stock_history->save();
+            $stock_history = new StockHistory;
+            $stock_history->stock_id = $stock->id;
+            $stock_history->status = 'masuk';
+            $stock_history->quantity = $request->stock;
+            $stock_history->save();
+
+            $variant = ProductVariant::where('id', $request->variant_id)->first();
+
+            $notification = new Notification;
+            $notification->branch_id = $variant->branch_id;
+            $notification->source_id = $variant->id;
+            $notification->routes = "/stocks/detail/";
+            $notification->title = "Stok Diperbarui";
+            $notification->subtitle = $variant->variant_name;
+            $notification->seen = 0;
+            $notification->save();
+        }else{
+            $req = new StockRequest;
+            $req->variant_id = $request->variant_id;
+            $req->product_stock_id = $request->product_stock_id;
+            $req->stock = $request->stock;
+            $req->branch_id = Session::get('branch_id');
+            $req->save();
+        }
 
         $status = [
             'status' => 'success',
@@ -159,6 +182,17 @@ class StockController extends Controller
         $stock_history->status = 'masuk';
         $stock_history->quantity = $request->stock;
         $stock_history->save();
+
+        $variant = ProductVariant::where('id', $request->variant_id)->first();
+
+        $notification = new Notification;
+        $notification->branch_id = $variant->branch_id;
+        $notification->source_id = $variant->id;
+        $notification->routes = "/stock/detail/";
+        $notification->title = "Stok Diperbarui";
+        $notification->subtitle = $variant->variant_name;
+        $notification->seen = 0;
+        $notification->save();
 
         $status = [
             'status' => 'info',

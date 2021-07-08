@@ -21,10 +21,12 @@ Data Varian Produk | Ubiku Dashboard
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
+					@if(Session::get('branch_id') == 1)
 					<a class="btn btn-xs btn-rounded btn-info " href="{{ route('variant.create') }}">
 						<i class="menu-icon fa fa-plus ">
 						</i> Add Data 
 					</a>
+					@endif
 
 					<ul class="nav nav-tabs" id="myTabs" role="tablist" style="margin-top: 20px;">
 						@php $tno = 1 @endphp
@@ -69,9 +71,9 @@ Data Varian Produk | Ubiku Dashboard
 												<i class="menu-icon fa fa-remove"> </i> Nonaktifkan  
 											</a>
 											@else
-											<button class="btn btn-xs btn-rounded btn-success" href="/variant/status/{{$variant->id}}/nonaktif"> 
-												<i class="menu-icon fa fa-check"> </i> Aktifkan  
-											</button>
+											<a class="btn btn-xs btn-rounded btn-success" href="/variant/status/{{$variant->id}}/aktif"> 
+												<i class="menu-icon fa fa-check"> </i> Aktifkan
+											</a>
 											@endif
 										</td> 
 									</tr> 

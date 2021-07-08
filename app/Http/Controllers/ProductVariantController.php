@@ -7,6 +7,7 @@ use App\ProductVariant;
 use App\Branch;
 use App\Stock;
 use App\ProductStock;
+use App\Notification;
 
 class ProductVariantController extends Controller
 {
@@ -59,6 +60,15 @@ class ProductVariantController extends Controller
         $stock->stock = 0;
         $stock->real_stock = 0;
         $stock->save();
+
+        $notification = new Notification;
+        $notification->branch_id = $request->branch_id;
+        $notification->source_id = $variant->id;
+        $notification->routes = "/variant/";
+        $notification->title = "Varian Produk Baru";
+        $notification->subtitle = $request->variant_name;
+        $notification->seen = 0;
+        $notification->save();
 
         $status = [
             'status' => 'info',

@@ -45,11 +45,12 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        $lastOrder = Transaction::orderBy('transaction_no', 'DESC')->get();
+        $lastOrder = Transaction::where('branch_id', Session::get('branch_id'))->orderBy('transaction_no', 'DESC')->get();
+        $transaction['prefix'] = Branch::where('id', Session::get('branch_id'))->first()->prefix;
         if (count($lastOrder) == 0) {
             $transaction['transaction_no'] = "0001";
         }else{
-            $tmp = explode('SO/', $lastOrder[0]->transaction_no);
+            $tmp = explode($transaction['prefix'], $lastOrder[0]->transaction_no);
             $newOrder = $tmp[1]+1;
             if ($newOrder < 10) {
                 $transaction['transaction_no'] = "000".$newOrder;
@@ -63,8 +64,14 @@ class TransactionController extends Controller
         }
 
         $branch_id = Session::get('branch_id');
-        $transaction['product'] = ProductVariant::where('branch_id', $branch_id)->get();
-        $transaction['sales'] = Sales::where('branch_id', $branch_id)->get();
+        $transaction['product'] = ProductVariant::where([
+            ['branch_id', $branch_id],
+            ['status', 'aktif']
+        ])->get();
+        $transaction['sales'] = Sales::where([
+            ['branch_id', $branch_id],
+            ['status', 'aktif']
+        ])->get();
         
         // $transaction['stock'] = Stock::join('product_stocks', 'stocks.product_stock_id', '=', 'product_stocks.id')
         //                     ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
@@ -98,8 +105,10 @@ class TransactionController extends Controller
             $customer_id = $cust->first()->id;
         }
 
+        $prefix = Branch::where('id', Session::get('branch_id'))->first()->prefix;
+
         $transaction = new Transaction;
-        $transaction->transaction_no = "SO/".$request->transaction_no;
+        $transaction->transaction_no = $prefix.$request->transaction_no;
         $transaction->branch_id = $request->branch_id;
         $transaction->total = $request->total;
         $transaction->date = $request->date;

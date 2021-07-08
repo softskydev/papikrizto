@@ -45,7 +45,7 @@ Data Transaksi | Ubiku Dashboard
                         	<div class="col-md-4">
                         		<label>Nomor Transaksi : </label>
                                 <div class="input-group margin-bottom-20">
-									<div class="input-group-btn"><label for="ig-1" class="btn btn-default">SO/</label></div>
+									<div class="input-group-btn"><label for="ig-1" class="btn btn-default">{{$prefix}}</label></div>
 									<!-- /.input-group-btn -->
 									<input id="ig-1" type="number" name="transaction_no" class="form-control" placeholder="Nomor Transaksi" value="{{$transaction_no}}" required="">
 								</div>
