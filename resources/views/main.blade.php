@@ -41,6 +41,7 @@
 	
 	<!-- SWeet alert -->
 	<link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+	<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
     <script src="{{ url('app-assets/scripts/jquery.min.js') }}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -50,6 +51,19 @@
 	<script>
 		const global_url = '{{ url("") }}';
 		const token = '{{ csrf_token() }}';
+
+		Pusher.logToConsole = true;
+
+		var pusher = new Pusher('3c2eb066d5763d84c773', {
+			cluster: 'ap1'
+		});
+
+		var channel = pusher.subscribe('my-channel');
+		channel.bind('my-event', function(data) {
+		alert(JSON.stringify(data));
+		});
+
+
 	</script>
 
 	{{-- Datatatable --}}
