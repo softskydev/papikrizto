@@ -57,3 +57,6 @@ Route::resource('request', 'StockRequestController');
 Route::resource('account', 'AccountController');
 Route::resource('hutangpiutang', 'HutangPiutangController');
 Route::resource('asset', 'AssetController');
+
+Route::get('report/labarugi', 'ReportController@labarugi');
+Route::get('report/neraca', 'ReportController@neraca');
