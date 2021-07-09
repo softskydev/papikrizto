@@ -53,3 +53,7 @@ Route::get('transaction/json_product_stock/{variant_id}', 'TransactionController
 Route::get('transaction/json_product/all', 'TransactionController@json_product');
 
 Route::resource('request', 'StockRequestController');
+
+Route::resource('account', 'AccountController');
+Route::resource('hutangpiutang', 'HutangPiutangController');
+Route::resource('asset', 'AssetController');
