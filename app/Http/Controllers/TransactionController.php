@@ -17,6 +17,7 @@ use App\ProductStock;
 use App\BranchStock;
 use App\BranchStockHistory;
 use Session;
+use PDF;
 
 class TransactionController extends Controller
 {
@@ -283,7 +284,7 @@ class TransactionController extends Controller
                         ->get();
         echo json_encode($product_stock);
     }
-    public function print(){
+    public function print($id){
         $transaction['detail'] = Transaction::join('branches', 'branches.id', '=', 'transactions.branch_id')
                         ->join('customers', 'customers.id', '=', 'transactions.customer_id')
                         ->where('transactions.id', $id)
@@ -297,8 +298,9 @@ class TransactionController extends Controller
                                 ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
                                 ->where('transaction_id', $id)->select('product_variants.*', 'transaction_items.*', 'product_stocks.*')->get();
 
-        // echo json_encode($transaction['item']);
 
-        return view('transaction.print', $transaction);
+        $pdf = PDF::loadview('transaction/pdf',$transaction)->setPaper('A4', 'potrait');
+        return $pdf->stream("INV_".$transaction['detail']->transaction_no.".pdf");
+        // return view('transaction.print', $transaction);
     }
 }

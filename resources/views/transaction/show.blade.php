@@ -65,7 +65,7 @@ Data Transaksi | Ubiku Dashboard
 					@foreach($item AS $i)
 					<tr class="item">
 						<td>
-							{{$i->name}}
+							{{$i->variant_name}}
 						</td>
 						<td class="text-center">
 							{{$i->quantity}} {{$i->nama_stock}}
@@ -86,7 +86,7 @@ Data Transaksi | Ubiku Dashboard
 				</table>
 				<div class="text-right margin-top-20">
 					<ul class="list-inline">
-						<li><button type="button" class="btn btn-primary waves-effect waves-light"><i class='fa fa-print'></i> Print</button></li>
+						<li><a href="/transaction/print/{{$detail->id}}" type="button" class="btn btn-primary waves-effect waves-light"><i class='fa fa-download'></i> Download PDF</a></li>
 						<li><a href="{{route('transaction.index')}}" class="btn btn-default waves-effect waves-light"><i class='fa fa-chevron-left'></i> Kembali</a></li>
 					</ul>
 				</div>
