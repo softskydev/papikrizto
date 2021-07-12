@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Lib\PusherFactory;
 use App\Product;
 use App\ProductVariant;
 use App\ProductStock;
@@ -58,7 +59,11 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        if (Session::get('branch_id') == 1) {
+        $branch_id   = Session       ::get('branch_id');
+        $branch_name = Branch        ::where('id' , $branch_id)->first();
+        $variant     = ProductVariant::where('id' , $request->variant_id)->first();
+
+        if ( $branch_id == 1) {
             $stock = new Stock;
             $stock->variant_id = $request->variant_id;
             $stock->product_stock_id = $request->product_stock_id;
@@ -87,8 +92,6 @@ class StockController extends Controller
             $stock_history->quantity = $request->stock;
             $stock_history->save();
 
-            $variant = ProductVariant::where('id', $request->variant_id)->first();
-
             $notification = new Notification;
             $notification->branch_id = $variant->branch_id;
             $notification->source_id = $variant->id;
@@ -97,6 +100,7 @@ class StockController extends Controller
             $notification->subtitle = $variant->variant_name;
             $notification->seen = 0;
             $notification->save();
+            
         }else{
             $req = new StockRequest;
             $req->variant_id = $request->variant_id;
@@ -104,6 +108,18 @@ class StockController extends Controller
             $req->stock = $request->stock;
             $req->branch_id = Session::get('branch_id');
             $req->save();
+
+            $notification = new Notification;
+            $notification->branch_id = $variant->branch_id;
+            $notification->source_id = $variant->id;
+            $notification->routes = "/stocks/detail/";
+            $notification->title = "Request Stock";
+            $notification->subtitle = " $branch_name->name meminta produk $variant->name ";
+            $notification->seen = 0;
+            $notification->save();
+
+            PusherFactory::make()->trigger('request', 'req-item', ['notification_id' => $notification->id]);
+
         }
 
         $status = [

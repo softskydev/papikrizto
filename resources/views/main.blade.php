@@ -58,9 +58,9 @@
 			cluster: 'ap1'
 		});
 
-		var channel = pusher.subscribe('my-channel');
-		channel.bind('my-event', function(data) {
-		alert(JSON.stringify(data));
+		var channel = pusher.subscribe('request');
+			channel.bind('req-item', function(data) {
+			console.log(data);
 		});
 
 
@@ -246,13 +246,17 @@
 	<!-- Chartist Chart -->
 	<script src="{{ url('app-assets/plugin/chart/chartist/chartist.min.js') }}"></script>
 	<script src="{{ url('app-assets/scripts/jquery.chartist.init.min.js') }}"></script>
-
+	
 	<!-- FullCalendar -->
 	<script src="{{ url('app-assets/plugin/moment/moment.js') }}"></script>
 	<script src="{{ url('app-assets/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
 	<script src="{{ url('app-assets/scripts/fullcalendar.init.js') }}"></script>
 
 	<script src="{{ url('app-assets/scripts/main.min.js') }}"></script>
+
+	<!-- Notification JS -->
+	<script src="{{ url('app-assets/scripts/notification.js') }}"></script>
+
 
 	<!-- Data Tables -->
 	<script src="{{url('app-assets/plugin/datatables/media/js/jquery.dataTables.min.js')}}"></script>

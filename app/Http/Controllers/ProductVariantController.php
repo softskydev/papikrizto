@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\ProductVariant;
 use App\Branch;
 use App\Stock;
 use App\ProductStock;
 use App\Notification;
+
 
 class ProductVariantController extends Controller
 {
@@ -69,6 +71,10 @@ class ProductVariantController extends Controller
         $notification->subtitle = $request->variant_name;
         $notification->seen = 0;
         $notification->save();
+        
+
+        
+
 
         $status = [
             'status' => 'info',
