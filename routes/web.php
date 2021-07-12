@@ -60,3 +60,5 @@ Route::resource('asset', 'AssetController');
 
 Route::get('report/labarugi', 'ReportController@labarugi');
 Route::get('report/neraca', 'ReportController@neraca');
+Route::get('report/hutang/{category}', 'ReportController@hutang');
+Route::post('report/hutang/{category}', 'ReportController@hutang');

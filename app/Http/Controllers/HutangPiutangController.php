@@ -42,6 +42,11 @@ class HutangPiutangController extends Controller
     {
         $hutangpiutang = new hutangpiutang;
         $hutangpiutang->type = $request->type;
+        if($hutangpiutang->type == "Hutang"){
+            $hutangpiutang->category = $request->category;
+        }else{
+            $hutangpiutang->category = "-";
+        }
         $hutangpiutang->nominal = $request->nominal;
         $hutangpiutang->date = $request->date;
         $hutangpiutang->note = $request->note;
@@ -89,6 +94,11 @@ class HutangPiutangController extends Controller
     {
         $hutangpiutang = HutangPiutang::find($id);
         $hutangpiutang->type = $request->type;
+        if($hutangpiutang->type == "Hutang"){
+            $hutangpiutang->category = $request->category;
+        }else{
+            $hutangpiutang->category = "-";
+        }
         $hutangpiutang->nominal = $request->nominal;
         $hutangpiutang->date = $request->date;
         $hutangpiutang->note = $request->note;
@@ -110,6 +120,13 @@ class HutangPiutangController extends Controller
      */
     public function destroy($id)
     {
-        //
+        HutangPiutang::findOrFail($id)->delete();
+        
+        $status = [
+            'status' => 'danger',
+            'msg' => 'Data berhasil di hapus'
+        ];
+
+        echo json_encode($status);
     }
 }

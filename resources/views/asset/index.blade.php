@@ -79,5 +79,5 @@ Data Aset | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/account/asset.js') }}"></script>
+<script src="{{ url('js/asset/asset.js') }}"></script>
 @endsection

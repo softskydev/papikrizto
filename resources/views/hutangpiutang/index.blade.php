@@ -34,11 +34,12 @@ Data Hutang & Piutang | Ubiku Dashboard
 					<!-- /.dropdown js__dropdown -->
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade in active" role="tabpanel" id="tabhutang" aria-labelledby="hutang-tab">
-							<table class="table table-striped">
+							<table class="table table-striped data-tables">
 								<thead>
 									<tr>
 										<th>#</th>
 										<th>Tanggal</th> 
+										<th>Kategori</th>
 										<th>Keterangan</th> 
 										<th>Nominal</th>
 										<th>Action</th> 
@@ -51,6 +52,7 @@ Data Hutang & Piutang | Ubiku Dashboard
 									<tr> 
 										<th scope="row">{{ $no++ }}</th> 
 										<td>{{ format($hutangpiutang->date) }}</td>
+										<td>{{ $hutangpiutang->category }}</td>
 										<td>{{ $hutangpiutang->note }}</td>
 										<td>{{ rupiah($hutangpiutang->nominal) }}</td>
 										<td>
@@ -75,7 +77,7 @@ Data Hutang & Piutang | Ubiku Dashboard
 							</table>
 						</div>
 							<div class="tab-pane fade in" role="tabpanel" id="tabpiutang" aria-labelledby="piutang-tab">
-							<table class="table table-striped">
+							<table class="table table-striped data-tables">
 								<thead>
 									<tr>
 										<th>#</th>
@@ -130,5 +132,5 @@ Data Hutang & Piutang | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/account/hutangpiutang.js') }}"></script>
+<script src="{{ url('js/hutangpiutang/hutangpiutang.js') }}"></script>
 @endsection

@@ -42,6 +42,9 @@
 	<!-- SWeet alert -->
 	<link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
 
+	<!-- DateRangepicker -->
+	<link rel="stylesheet" href="{{url('app-assets/plugin/daterangepicker/daterangepicker.css')}}">
+
     <script src="{{ url('app-assets/scripts/jquery.min.js') }}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	
@@ -55,6 +58,9 @@
 	{{-- Datatatable --}}
 	<link rel="stylesheet" href="{{url('app-assets/plugin/datatables/media/css/dataTables.bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{url('app-assets/plugin/datatables/extensions/Responsive/css/responsive.bootstrap.min.css')}}">
+
+	<!-- Datepicker -->
+	<link rel="stylesheet" href="{{url('app-assets/plugin/datepicker/css/bootstrap-datepicker.min.css')}}">
 </head>
 <body>
 <div class="main-menu">
@@ -69,34 +75,34 @@
 			<h5 class="title">Navigation</h5>
 			<!-- /.title -->
 			<ul class="menu js__accordion">
-				<li>
+				<li {!!(Request::segment(1)=='dashboard'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ url('/dashboard') }}"><i class="menu-icon ti-dashboard"></i><span>Dashboard</span></a>
 				</li>
 				@if(Session::get('branch_id') == 1)
-				<li>
+				<li {!!(Request::segment(1)=='branch'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('branch.index') }}"><i class="menu-icon ti-layout-grid2"></i><span>Cabang</span></a>
 				</li>
-				<li>
+				<li {!!(Request::segment(1)=='admin'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('admin.index') }}"><i class="menu-icon ti-user"></i><span>Admin</span></a>
 				</li>
-                <li>
+                <li {!!(Request::segment(1)=='product_stock'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('product_stock.index') }}"><i class="menu-icon ti-import"></i><span>Product Satuan</span></a>
 				</li>
 				@endif
-				<li>
+				<li {!!(Request::segment(1)=='variant'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('variant.index') }}"><i class="menu-icon ti-gift"></i><span>Product Variant</span></a>
 				</li>
-				<li>
+				<li {!!(Request::segment(1)=='stock'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('stock.index') }}"><i class="menu-icon ti-package"></i><span>Stock</span></a>
 				</li>
-				<li>
+				<li {!!(Request::segment(1)=='sales'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('sales.index') }}"><i class="menu-icon ti-comments-smiley"></i><span>Sales</span></a>
 				</li>
-				<li>
+				<li {!!(Request::segment(1)=='transaction'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-receipt"></i><span>Transaksi</span></a>
 				</li>
-				@if(Session::get('branch_id'))
-				<li>
+				@if(Session::get('branch_id') == 1)
+				<li {!!((Request::segment(1)=='account')||(Request::segment(1)=='asset')||(Request::segment(1)=='hutangpiutang')?'class="current active"':'')!!}>
 					<a class="waves-effect parent-item js__control" href="#"><i class="menu-icon ti-money"></i><span>Finance</span><span class="menu-arrow fa fa-angle-down"></span></a>
 					<ul class="sub-menu js__content">
 						<li><a href="{{route('account.index')}}">Akun</a></li>
@@ -105,9 +111,12 @@
 					</ul>
 					<!-- /.sub-menu js__content -->
 				</li>
-				<li>
+				<li {!!(Request::segment(1)=='report'?'class="current active"':'')!!}>
 					<a class="waves-effect parent-item js__control" href="#"><i class="menu-icon ti-money"></i><span>Report</span><span class="menu-arrow fa fa-angle-down"></span></a>
 					<ul class="sub-menu js__content">
+						<li><a href="/report/hutang/bank">Hutang Bank</a></li>
+						<li><a href="/report/hutang/pihak_ketiga">Hutang Pihak Ketiga</a></li>
+						<li><a href="/report/hutang/pemegang_saham">Hutang Pemegang Saham</a></li>
 						<li><a href="/report/labarugi">Laba Rugi</a></li>
 						<li><a href="/report/neraca">Neraca</a></li>
 					</ul>
@@ -245,6 +254,9 @@
 	<script src="{{url('app-assets/plugin/datatables/media/js/dataTables.bootstrap.min.js')}}"></script>
 	<script src="{{url('app-assets/plugin/datatables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
 	<script src="{{url('app-assets/plugin/datatables/extensions/Responsive/js/responsive.bootstrap.min.js')}}"></script>
+
+	<!-- Datepicker -->
+	<script src="{{url('app-assets/plugin/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
 	{{-- <script src="{{url('app-assets/scripts/datatables.demo.min.js')}}"></script> --}}
 
 </body>

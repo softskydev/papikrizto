@@ -108,6 +108,13 @@ class AssetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Asset::findOrFail($id)->delete();
+        
+        $status = [
+            'status' => 'danger',
+            'msg' => 'Data berhasil di hapus'
+        ];
+
+        echo json_encode($status);
     }
 }
