@@ -38,7 +38,7 @@ Laporan Neraca | Ubiku Dashboard
 									</tr>
 									<tr>
 										<td>Stok</td>
-										<td>{{rupiah(0)}}</td>
+										<td>{{rupiah($stock)}}</td>
 									</tr>
 									<tr>
 										<td>Biaya dibayar di muka</td>
@@ -49,8 +49,20 @@ Laporan Neraca | Ubiku Dashboard
 							<td width="50%">
 								<table width="100%" class="table table-striped">
 									<tr>
-										<td>Hutang</td>
-										<td>{{rupiah($hutang)}}</td>
+										<td>Hutang Bank</td>
+										<td>{{rupiah($hutang_bank)}}</td>
+									</tr>
+									<tr>
+										<td>Hutang Pihak Ketiga</td>
+										<td>{{rupiah($hutang_pihak_ketiga)}}</td>
+									</tr>
+									<tr>
+										<td>Hutang Pemegang Saham</td>
+										<td>{{rupiah($hutang_pemegang_saham)}}</td>
+									</tr>
+									<tr>
+										<th>Total Hutang</th>
+										<th>{{rupiah($hutang)}}</th>
 									</tr>
 								</table>
 							</td>

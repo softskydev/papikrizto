@@ -30,9 +30,19 @@ Data Hutang & Piutang | Ubiku Dashboard
                                <div class="form-group">
 									<label for="inp-type-1" class="col-sm-2 pull-left">Hutang/Piutang</label>
 									<div class="col-sm-10">
-										<select class="form-control" name="type" required="">
+										<select class="form-control" name="type" required="" id="type" onchange="setType()">
 											<option {{($detail->type=="Hutang"?"selected":"")}}>Hutang</option>
 											<option {{($detail->type=="Piutang"?"selected":"")}}>Piutang</option>
+										</select>
+	                                </div>
+								</div>
+								<div class="form-group" id="category">
+									<label for="inp-type-1" class="col-sm-2 pull-left">Kategori</label>
+									<div class="col-sm-10">
+										<select class="form-control" name="category" required="">
+											<option {{$detail->category=="Hutang Bank"?"selected":""}}>Hutang Bank</option>
+											<option {{$detail->category=="Hutang Pihak Ketiga"?"selected":""}}>Hutang Pihak Ketiga</option>
+											<option {{$detail->category=="Hutang Pemegang Saham"?"selected":""}}>Hutang Pemegang Saham</option>
 										</select>
 	                                </div>
 								</div>
@@ -51,7 +61,7 @@ Data Hutang & Piutang | Ubiku Dashboard
 								<div class="form-group">
 									<label for="inp-type-1" class="col-sm-2 pull-left">Keterangan</label>
 									<div class="col-sm-10">
-										<input type="text" name="note" class="form-control" id="inp-type-1" placeholder="Keterangan" value="{{$detail->note}}">
+										<textarea name="note" class="form-control" placeholder="Keterangan">{{$detail->note}}</textarea>
 	                                </div>
 								</div>
                             <hr>
@@ -80,4 +90,7 @@ Data Hutang & Piutang | Ubiku Dashboard
 	<!-- /.main-content -->
 </div><!--/#wrapper -->
 
+@endsection
+@section('js')
+<script src="{{ url('js/hutangpiutang/hutangpiutang.js') }}"></script>
 @endsection

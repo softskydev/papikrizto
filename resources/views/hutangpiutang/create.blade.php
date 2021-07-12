@@ -29,9 +29,19 @@ Data Hutang & Piutang | Ubiku Dashboard
                         	<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Hutang/Piutang</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="type" required="">
+									<select class="form-control" name="type" id="type" required="" onchange="setType()">
 										<option>Hutang</option>
 										<option>Piutang</option>
+									</select>
+                                </div>
+							</div>
+							<div class="form-group" id="category">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Kategori</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="category" required="">
+										<option>Hutang Bank</option>
+										<option>Hutang Pihak Ketiga</option>
+										<option>Hutang Pemegang Saham</option>
 									</select>
                                 </div>
 							</div>
@@ -50,7 +60,7 @@ Data Hutang & Piutang | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Keterangan</label>
 								<div class="col-sm-10">
-									<input type="text" name="note" class="form-control" id="inp-type-1" placeholder="Keterangan">
+									<textarea name="note" class="form-control" placeholder="Keterangan"></textarea>
                                 </div>
 							</div>
                             <hr>
@@ -79,4 +89,7 @@ Data Hutang & Piutang | Ubiku Dashboard
 	<!-- /.main-content -->
 </div><!--/#wrapper -->
 
+@endsection
+@section('js')
+<script src="{{ url('js/hutangpiutang/hutangpiutang.js') }}"></script>
 @endsection
