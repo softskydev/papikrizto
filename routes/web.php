@@ -34,6 +34,7 @@ Route::resource('product_stock' , 'ProductStockController');
 
 Route::resource('stock' , 'StockController', ['except' => 'create']);
 Route::get('/stock/json_variant/{branch_id}', 'StockController@json_variant');
+Route::get('/stock/json_stock/{variant_id}/{product_stock_id}', 'StockController@json_stock');
 Route::get('/stock/create/{variant_id}', [
 	'as' => 'stock.create',
 	'uses' => 'StockController@create'
@@ -59,7 +60,10 @@ Route::resource('account', 'AccountController');
 Route::resource('hutangpiutang', 'HutangPiutangController');
 Route::resource('asset', 'AssetController');
 
+Route::get('report/stock', 'ReportController@stock');
+Route::get('report/stock/print/{id}', 'ReportController@stock_print');
 Route::get('report/labarugi', 'ReportController@labarugi');
+Route::post('report/labarugi/print/{id}', 'ReportController@labarugi_print');
 Route::get('report/neraca', 'ReportController@neraca');
 
 Route::get('report/hutang/{category}', 'ReportController@hutang');

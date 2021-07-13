@@ -61,7 +61,6 @@ class StockController extends Controller
     {
 
         $branch_id = Session::get('branch_id');
-
         if ($branch_id == 1) { // admin ubiku
             if ($request->stock_id == 0) {
 

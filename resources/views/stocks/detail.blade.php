@@ -56,7 +56,7 @@ Data Stok | Ubiku Dashboard
 									<a class="btn btn-xs btn-rounded btn-warning" href="{{route('stock.show', $stock->id)}}"> 
 										<i class="menu-icon fa fa-edit "> </i> Edit Stok
 									</a>
-									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $stock->id }}')"><i class="menu-icon fa fa-trash"></i> Hapus Stok</button>
+									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $stock->id }}', '{{$stock->variant_id}}')"><i class="menu-icon fa fa-trash"></i> Hapus Stok</button>
 								</td> 
 							</tr>
 						@empty

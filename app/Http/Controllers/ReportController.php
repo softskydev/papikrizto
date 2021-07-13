@@ -9,12 +9,65 @@ use App\Asset;
 use App\Account;
 use App\HutangPiutang;
 use App\Stock;
+use App\Branch;
+use PDF;
 
 class ReportController extends Controller
 {
+    public function stock(){
+        $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', 'product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'))
+                    ->where('stocks.stock', '>', 0)
+                    ->groupBy('stocks.id')
+                    ->orderBy('product_variants.product_code')
+                    ->get();
+        $report['branch'] = Branch::all();
+        return view('report/stock', $report);
+    }
+    public function stock_print($id){
+        $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', 'product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'))
+                    ->where([
+                        ['stocks.stock', '>', 0],
+                        ['product_variants.branch_id', '=', $id]
+                    ])
+                    ->groupBy('stocks.id')
+                    ->orderBy('product_variants.product_code')
+                    ->get();
+        $report['branch'] = Branch::where('id', $id)->first()->name;
+
+        $pdf = PDF::loadview('report/stock_pdf',$report)->setPaper('A4', 'potrait');
+        return $pdf->stream("STOCK_".$report['branch'].".pdf");
+    }
     public function labarugi(){
-    	$report['penjualan'] = Transaction::select(DB::raw('SUM(total) AS total'))->first()->total;
+        $report['penjualan'] =  [];
+        $report['branch'] = Branch::all();
+        foreach ($report['branch'] as $b) {
+            $report['penjualan'][$b->id] = Transaction::select(DB::raw('SUM(total) AS total'))
+                                ->where('branch_id', $b->id)
+                                ->first()->total;
+            if ($report['penjualan'][$b->id] == null) {
+                $report['penjualan'][$b->id] = 0;
+            }
+        }
+
     	return view('report/labarugi', $report);
+    }
+    public function labarugi_print($id, Request $request){
+        $report['penjualan'] = Transaction::select(DB::raw('SUM(total) AS total'))
+                                ->where('branch_id', $id)
+                                ->first()->total;
+        $report['branch'] = Branch::where('id', $id)->first()->name;
+        $report['pendapatanlain'] = $request->pendapatanlain;
+        $report['hpp'] = $request->hpp;
+        $report['biaya'] = $request->biaya;
+        $report['interest'] = $request->interest;
+        $report['tax'] = $request->tax;
+
+        $pdf = PDF::loadview('report/labarugi_pdf',$report)->setPaper('A4', 'potrait');
+        return $pdf->stream("LABARUGI_".$report['branch'].".pdf");
     }
     public function neraca(){
     	$report['asset'] = Asset::all();

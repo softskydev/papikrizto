@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-Data Stok | Ubiku Dashboard
+Laporan Stock | Ubiku Dashboard
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@ Data Stok | Ubiku Dashboard
 
         <div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Stok Produk</h4>
+					<h4 class="box-title">Laporan Stock</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -21,8 +21,6 @@ Data Stok | Ubiku Dashboard
 						</ul>
 						<!-- /.sub-menu -->
 					</div>
-
-					<!-- /.dropdown js__dropdown -->
 
 					<ul class="nav nav-tabs" id="myTabs" role="tablist" style="margin-top: 20px;">
 						@php $tno = 1 @endphp
@@ -39,37 +37,26 @@ Data Stok | Ubiku Dashboard
 					@foreach($branch AS $b)
 						@if(Session::get('branch_id') == 1 || Session::get('branch_id') == $b->id)
 						<div class="tab-pane fade in {!!$tno==1?'active':''!!}" role="tabpanel" id="tab{{$b->id}}" aria-labelledby="{{strtolower($b->name)}}-tab">
-							<!-- /.dropdown js__dropdown -->
-							<table class="table table-striped data-tables">
+							<table class="table table-striped">
 								<thead>
 									<tr>
 										<th>#</th>
 										<th>Kode Produk</th>
 										<th width='40%'>Varian Produk</th>  
 										<th>Stok</th>
-										<th>Action</th> 
+										<th>Satuan</th>
 									</tr> 
 								</thead> 
 								<tbody> 
 								@php $no = 1; @endphp
-								@forelse ($data as $stock)
-									@if($stock->branch_id == $b->id)
+								@forelse ($stock as $s)
+									@if($s->branch_id == $b->id)
 									<tr> 
 										<th scope="row">{{ $no++ }}</th> 
-										<td>{{$stock->product_code}}</td>
-										<td>{{$stock->variant}}</td>
-										<td>
-											@foreach($stocks AS $s)
-												@if($s->variant_id == $stock->variant_id)
-												<b>{{$s->stock}}</b> {{$s->nama_stock}}<br>
-												@endif
-											@endforeach
-										</td>
-										<td>
-											<a class="btn btn-xs btn-rounded btn-info" href="/stock/detail/{{$stock->variant_id}}"> 
-												<i class="menu-icon fa fa-eye "> </i> Detail Stok 
-											</a>
-										</td> 
+										<td>{{$s->product_code}}</td>
+										<td>{{$s->variant}}</td>
+										<td>{{$s->stock}}</td>
+										<td>{{$s->nama_stock}}</td>
 									</tr>
 									@endif
 								@empty
@@ -81,10 +68,16 @@ Data Stok | Ubiku Dashboard
 								@endforelse 
 								</tbody> 
 							</table>
+							<div class="text-right">
+								<a href="/report/stock/print/{{$b->id}}" type="button" class="btn btn-primary waves-effect waves-light"><i class='fa fa-download'></i> Download PDF</a>
+							</div>
 						</div>
 						@php $tno++ @endphp
 					@endif
 					@endforeach
+					</div>
+
+					<!-- /.dropdown js__dropdown -->
 					</div>
 				</div>
 				<!-- /.box-content -->
