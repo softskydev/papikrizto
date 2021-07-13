@@ -42,8 +42,32 @@ class ReportController extends Controller
         return $pdf->stream("STOCK_".$report['branch'].".pdf");
     }
     public function labarugi(){
-    	$report['penjualan'] = Transaction::select(DB::raw('SUM(total) AS total'))->first()->total;
+        $report['penjualan'] =  [];
+        $report['branch'] = Branch::all();
+        foreach ($report['branch'] as $b) {
+            $report['penjualan'][$b->id] = Transaction::select(DB::raw('SUM(total) AS total'))
+                                ->where('branch_id', $b->id)
+                                ->first()->total;
+            if ($report['penjualan'][$b->id] == null) {
+                $report['penjualan'][$b->id] = 0;
+            }
+        }
+
     	return view('report/labarugi', $report);
+    }
+    public function labarugi_print($id, Request $request){
+        $report['penjualan'] = Transaction::select(DB::raw('SUM(total) AS total'))
+                                ->where('branch_id', $id)
+                                ->first()->total;
+        $report['branch'] = Branch::where('id', $id)->first()->name;
+        $report['pendapatanlain'] = $request->pendapatanlain;
+        $report['hpp'] = $request->hpp;
+        $report['biaya'] = $request->biaya;
+        $report['interest'] = $request->interest;
+        $report['tax'] = $request->tax;
+
+        $pdf = PDF::loadview('report/labarugi_pdf',$report)->setPaper('A4', 'potrait');
+        return $pdf->stream("LABARUGI_".$report['branch'].".pdf");
     }
     public function neraca(){
     	$report['asset'] = Asset::all();

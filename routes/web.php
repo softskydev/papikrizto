@@ -63,6 +63,7 @@ Route::resource('asset', 'AssetController');
 Route::get('report/stock', 'ReportController@stock');
 Route::get('report/stock/print/{id}', 'ReportController@stock_print');
 Route::get('report/labarugi', 'ReportController@labarugi');
+Route::post('report/labarugi/print/{id}', 'ReportController@labarugi_print');
 Route::get('report/neraca', 'ReportController@neraca');
 Route::get('report/hutang/{category}', 'ReportController@hutang');
 Route::post('report/hutang/{category}', 'ReportController@hutang');
