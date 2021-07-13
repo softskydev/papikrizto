@@ -29,9 +29,22 @@ Data Stok | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Varian Produk</label>
 								<div class="col-sm-10">
-									<input type="hidden" name="variant_id" value="{{$variant->id}}">
+									<input type="hidden" name="variant_id" id="variant_id" value="{{$variant->id}}">
 									<input type="text" disabled="" readonly="" class="form-control" value="{{$variant->variant_name}}">
 								</div>
+							</div>
+							<div class="form-group">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Satuan Produk</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="product_stock_id" onchange="set_stock_id()" id="ps">
+										<option>-Pilih Satuan-</option>
+										@foreach($product_stock_data AS $product_stock)
+										<option value="{{$product_stock->id}}">{{$product_stock->nama_stock}}</option>
+										@endforeach
+									</select>
+
+									<input type="hidden" name="stock_id" id="stock_id" value="0">
+                                </div>
 							</div>
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
@@ -39,21 +52,11 @@ Data Stok | Ubiku Dashboard
 									<input type="number" name="stock" class="form-control" placeholder="Stok" required="">
                                 </div>
 							</div>
-							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Satuan Produk</label>
-								<div class="col-sm-10">
-									<select class="form-control" name="product_stock_id">
-										@foreach($product_stock_data AS $product_stock)
-										<option value="{{$product_stock->id}}">{{$product_stock->nama_stock}}</option>
-										@endforeach
-									</select>
-                                </div>
-							</div>
 							@if(Session::get('branch_id') == 1)
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Harga per Satuan</label>
 								<div class="col-sm-10">
-									<input type="number" name="price" class="form-control" placeholder="Harga Satuan" required="">
+									<input type="number" name="price" id="price" class="form-control" placeholder="Harga Satuan" required="">
                                 </div>
 							</div>
                             <hr>
@@ -108,6 +111,35 @@ Data Stok | Ubiku Dashboard
                 });
 
                 set_price(no);
+            },
+            error: function (xhr, ajaxOptions, thrownError) { 
+              alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+            }
+        });
+	}
+	function set_stock_id(){
+	    var vid = $('#variant_id').val();
+	    var psid = $('#ps').val();
+	    
+	    $.ajax({
+            type: "GET", 
+            url: "/stock/json_stock/"+vid+"/"+psid,
+            dataType: "json",
+            beforeSend: function(e) {
+              if(e && e.overrideMimeType) {
+                e.overrideMimeType("application/json;charset=UTF-8");
+              }
+            },
+            success: function(response){
+            	if (response != 0) {
+            		$('#price').val(response['price']);
+            		$('#price').attr('disabled', 'disabled');
+            		$('#stock_id').val(response['id']);
+            	}else{
+            		$('#price').val('');
+            		$('#price').removeAttr('disabled');
+            		$('#stock_id').val(0);
+            	}
             },
             error: function (xhr, ajaxOptions, thrownError) { 
               alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 

@@ -59,27 +59,51 @@ class StockController extends Controller
     public function store(Request $request)
     {
         if (Session::get('branch_id') == 1) {
-            $stock = new Stock;
-            $stock->variant_id = $request->variant_id;
-            $stock->product_stock_id = $request->product_stock_id;
-            $stock->price = $request->price;
-            $stock->stock = $request->stock;
+            if ($request->stock_id == 0) {
+                $stock = new Stock;
+                $stock->variant_id = $request->variant_id;
+                $stock->product_stock_id = $request->product_stock_id;
+                $stock->price = $request->price;
+                $stock->stock = $request->stock;
 
-            $product_stock_id = $stock->product_stock_id;
-            $ps = ProductStock::where('id', $product_stock_id)->first();
-            $parent_id = $ps->stock_id;
-            $peritem = $ps->peritem;
-            $real_stock = $stock->stock;
-            if ($parent_id != 0){
-                while ($parent_id > 0) {
-                    $real_stock *= $peritem;
-                    $ps = ProductStock::where('id', $parent_id)->first();
-                    $parent_id = $ps->stock_id;
-                    $peritem = $ps->peritem;
+                $product_stock_id = $stock->product_stock_id;
+                $ps = ProductStock::where('id', $product_stock_id)->first();
+                $parent_id = $ps->stock_id;
+                $peritem = $ps->peritem;
+                $real_stock = $stock->stock;
+                if ($parent_id != 0){
+                    while ($parent_id > 0) {
+                        $real_stock *= $peritem;
+                        $ps = ProductStock::where('id', $parent_id)->first();
+                        $parent_id = $ps->stock_id;
+                        $peritem = $ps->peritem;
+                    }
                 }
+                $stock->real_stock = $real_stock;
+                $stock->save();
+            }else{
+                $stock = Stock::find($request->stock_id);
+                $stock->variant_id = $request->variant_id;
+                $stock->product_stock_id = $request->product_stock_id;
+                $stock->stock += $request->stock;
+
+                $product_stock_id = $stock->product_stock_id;
+                $ps = ProductStock::where('id', $product_stock_id)->first();
+                $parent_id = $ps->stock_id;
+                $peritem = $ps->peritem;
+                $real_stock = $stock->stock;
+                if ($parent_id != 0){
+                    while ($parent_id > 0) {
+                        $real_stock *= $peritem;
+                        $ps = ProductStock::where('id', $parent_id)->first();
+                        $parent_id = $ps->stock_id;
+                        $peritem = $ps->peritem;
+                    }
+                }
+                $stock->real_stock += $real_stock;
+
+                $stock->save();
             }
-            $stock->real_stock = $real_stock;
-            $stock->save();
 
             $stock_history = new StockHistory;
             $stock_history->stock_id = $stock->id;
@@ -238,4 +262,18 @@ class StockController extends Controller
 
         echo json_encode($variant);
     }
+
+    public function json_stock($variant_id, $product_stock_id){
+        $stock = Stock::where([
+            ['variant_id', '=', $variant_id],
+            ['product_stock_id', '=', $product_stock_id],
+            ['stock', '>', 0]
+        ])->first();
+
+        if ($stock) {
+            echo json_encode($stock);
+        }else{
+            echo json_encode(0);
+        }
+    }   
 }

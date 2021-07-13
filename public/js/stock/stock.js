@@ -1,4 +1,4 @@
-function doDelete(id){
+function doDelete(id,variant_id){
 
     Swal.fire({
         title: 'Yakin?',
@@ -19,13 +19,11 @@ function doDelete(id){
                 },
                 dataType : 'json',
                 success:function(resp){
-                    window.location.href=global_url+'/stock?&del_suc=1';
+                    window.location.href=global_url+'/stock/detail/'+variant_id+'?&del_suc=1';
                 }
             });
         }
-    });
-
-    
+    });  
 }
 
 $(document).ready(function(){

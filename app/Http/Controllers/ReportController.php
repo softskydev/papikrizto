@@ -9,9 +9,38 @@ use App\Asset;
 use App\Account;
 use App\HutangPiutang;
 use App\Stock;
+use App\Branch;
+use PDF;
 
 class ReportController extends Controller
 {
+    public function stock(){
+        $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', 'product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'))
+                    ->where('stocks.stock', '>', 0)
+                    ->groupBy('stocks.id')
+                    ->orderBy('product_variants.product_code')
+                    ->get();
+        $report['branch'] = Branch::all();
+        return view('report/stock', $report);
+    }
+    public function stock_print($id){
+        $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', 'product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'))
+                    ->where([
+                        ['stocks.stock', '>', 0],
+                        ['product_variants.branch_id', '=', $id]
+                    ])
+                    ->groupBy('stocks.id')
+                    ->orderBy('product_variants.product_code')
+                    ->get();
+        $report['branch'] = Branch::where('id', $id)->first()->name;
+
+        $pdf = PDF::loadview('report/stock_pdf',$report)->setPaper('A4', 'potrait');
+        return $pdf->stream("STOCK_".$report['branch'].".pdf");
+    }
     public function labarugi(){
     	$report['penjualan'] = Transaction::select(DB::raw('SUM(total) AS total'))->first()->total;
     	return view('report/labarugi', $report);
