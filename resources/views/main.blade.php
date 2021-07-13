@@ -61,11 +61,36 @@
 			cluster: 'ap1'
 		});
 
-		var channel = pusher.subscribe('request');
-			channel.bind('req-item', function(data) {
-			console.log(data);
+		var request = pusher.subscribe('request');
+			request.bind('req-item', function(data) {
+			if(data.status == 200){
+				notif_request();
+			}
 		});
 
+		var channel = pusher.subscribe('request');
+			channel.bind('item-loaded', function(data) {
+			notif_update_stock();
+		});
+
+		function notif_request(){
+			toastr.info("Ada Request dari Cabang lain");
+			load_notif_ajax();
+		}
+
+		function load_notif_ajax(){
+			$.ajax({
+                url:  global_url + '/request-load',
+                method: 'GET',
+                data: {
+                    _token : token
+                },
+                dataType : 'json',
+                success:function(datas){
+                    
+                }
+            });
+		}
 
 	</script>
 
@@ -176,17 +201,19 @@
 	<h2 class="popup-title">Request Stock</h2>
 	<!-- /.popup-title -->
 	<div class="content">
-		<ul class="notice-list">
+		<ul class="notice-list" id="notif">
 			@if(Session::get('branch_id') == 1)
 				@forelse($req AS $notif)
-					<li>
-						<a href="{{route('request.show', $notif->id)}}">
-							<span class="avatar bg-primary"><i class="menu-icon ti-package"></i></span>
-							<span class="name">{{$notif->branch}}</span>
-							<span class="desc">Request : {{$notif->variant}} ({{$notif->stock}} {{$notif->satuan}})</span>
-							{{-- <span class="time">10 min</span> --}}
-						</a>
-					</li>
+					<span>
+						<li id="notif_other_branch">
+							<a href="{{route('request.show', $notif->id)}}">
+								<span class="avatar bg-primary"><i class="menu-icon ti-package"></i></span>
+								<span class="name">{{$notif->branch}}</span>
+								<span class="desc">Request : {{$notif->variant}} ({{$notif->stock}} {{$notif->satuan}})</span>
+								{{-- <span class="time">10 min</span> --}}
+							</a>
+						</li>
+					</span>
 				@empty
 				<li class="text-center">Tidak ada notifikasi.</li>
 				@endforelse
