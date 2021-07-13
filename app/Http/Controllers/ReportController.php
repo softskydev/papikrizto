@@ -14,6 +14,9 @@ use PDF;
 
 class ReportController extends Controller
 {
+    public function __construct(){
+        $this->middleware('admin-middleware');
+    }
     public function stock(){
         $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
                     ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
@@ -61,7 +64,6 @@ class ReportController extends Controller
                                 ->first()->total;
         $report['branch'] = Branch::where('id', $id)->first()->name;
         $report['pendapatanlain'] = $request->pendapatanlain;
-        $report['hpp'] = $request->hpp;
         $report['biaya'] = $request->biaya;
         $report['interest'] = $request->interest;
         $report['tax'] = $request->tax;

@@ -153,6 +153,7 @@
 		
 		<!-- /.ico-item -->
 		<a href="#" class="ico-item ti-bell notice-alarm js__toggle_open" data-target="#notification-popup"></a>
+		<div class="badge bg-warning" style="margin-left: -10px; margin-top: -10px; padding:2px 5px; font-size: 10px;">1</div>
 		<div class="ico-item">
 			<i class="ti-user"></i>
 			<ul class="sub-ico-item">
