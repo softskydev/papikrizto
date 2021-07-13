@@ -1,31 +1,36 @@
-@extends('main')
-
-@section('title')
-Laporan Neraca | Ubiku Dashboard
-@endsection
-
-@section('content')
-
-<div id="wrapper">
-	<div class="main-content">
-		<div class="row small-spacing">
-
-        <form class="col-lg-12 col-xs-12" method="post" action="{{action('ReportController@neraca_print')}}">
-        	@csrf
-				<div class="box-content">
-					<h4 class="box-title">Neraca</h4>
-					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
-					<hr>
-
-					<!-- /.dropdown js__dropdown -->
-					<table class="table table-bordered">
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" >
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		*{
+			font-size: 14px;
+		}
+		.thead-dark{
+			font-size: 24px !important;
+		}
+		table.noborder,table.noborder *{
+			border: none !important;
+		}
+		.total{
+			font-size: 16px !important;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+        <div class="row">
+          <table class="table table-bordered">
+	          	<thead class="thead-dark">
+	        		<tr>
+						<th colspan="2">
+							Laporan Neraca
+						</th>
+					</tr>
+	        	</thead>
+				<tbody>
 						<tr>
 							<td width="50%">
 								<table width="100%" class="table table-striped">
@@ -43,7 +48,7 @@ Laporan Neraca | Ubiku Dashboard
 									</tr>
 									<tr>
 										<td>Biaya dibayar di muka</td>
-										<td>Rp.<input type="number" name="biaya" class="form-control input-sm" value="0" style="width:150px;float:right;"></td>
+										<td>{{rupiah($biaya)}}</td>
 									</tr>
 								</table>
 							</td>
@@ -69,7 +74,7 @@ Laporan Neraca | Ubiku Dashboard
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td width="50%">
 								<label>Aset</label>
 								<table width="100%" class="table table-striped">
 									<tr>
@@ -88,36 +93,22 @@ Laporan Neraca | Ubiku Dashboard
 									@endforeach
 								</table>
 							</td>
-							<td>
+							<td width="50%">
 								<table width="100%" class="table table-striped">
 									<tr>
 										<td>Laba Ditahan</td>
-										<td>Rp.<input type="number" name="labaditahan" class="form-control input-sm" value="0" style="width:150px;float:right;"></td>
+										<td>{{rupiah($labaditahan)}}</td>
 									</tr>
 									<tr>
 										<td>Laba Berjalan</td>
-										<td>Rp.<input type="number" name="lababerjalan" class="form-control input-sm" value="0" style="width:150px;float:right;"></td>
+										<td>{{rupiah($lababerjalan)}}</td>
 									</tr>
 								</table>
 							</td>
 						</tr>
-					</table>
-				</div>
-				<!-- /.box-content -->
-				<div class="text-right">
-					<button type="submit" class="btn btn-primary waves-effect waves-light"><i class='fa fa-download'></i> Download PDF</button>
-				</div>
-			</form>
-    
-        </div>
-		
-		<!-- /.row -->		
-		@include('footer')
+					</tbody>
+			</table>
+	    </div>
 	</div>
-	<!-- /.main-content -->
-</div><!--/#wrapper -->
-@endsection
-
-@section('js')
-<script src="{{ url('js/account/account.js') }}"></script>
-@endsection
+</body>
+</html>
