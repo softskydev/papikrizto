@@ -123,6 +123,15 @@
 					</ul>
 					<!-- /.sub-menu js__content -->
 				</li>
+				@else
+				<li {!!(Request::segment(1)=='report'?'class="current active"':'')!!}>
+					<a class="waves-effect parent-item js__control" href="#"><i class="menu-icon ti-money"></i><span>Report</span><span class="menu-arrow fa fa-angle-down"></span></a>
+					<ul class="sub-menu js__content">
+						<li><a href="/report/stock">Laporan Stok</a></li>
+						<li><a href="/report/labarugi">Laba Rugi</a></li>
+					</ul>
+					<!-- /.sub-menu js__content -->
+				</li>
 				@endif
 			</ul>
 			<div style="margin-top: 40px;"></div>
