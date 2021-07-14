@@ -100,6 +100,7 @@ class TransactionController extends Controller
             $customer = new Customer;
             $customer->name = $cust_name;
             $customer->no_telp = $cust_phone;
+            $customer->branch_id = Session::get('branch_id');
             $customer->save();
             $customer_id = $customer->id;
         }else{
@@ -177,8 +178,9 @@ class TransactionController extends Controller
     {
         $transaction['detail'] = Transaction::join('branches', 'branches.id', '=', 'transactions.branch_id')
                         ->join('customers', 'customers.id', '=', 'transactions.customer_id')
+                        ->join('sales', 'sales.id', '=', 'transactions.sales_id')
                         ->where('transactions.id', $id)
-                        ->select('transactions.*', DB::raw('branches.name AS branch'), DB::raw('customers.name AS cust_name'), DB::raw('customers.no_telp AS cust_phone'))
+                        ->select('transactions.*', DB::raw('branches.name AS branch'), DB::raw('customers.name AS cust_name'), DB::raw('customers.no_telp AS cust_phone'),DB::raw('sales.name AS sales_name'),DB::raw('sales.phone AS sales_phone'))
                         ->first();
         $transaction['item'] = TransactionItem::join('product_variants', 'product_variants.id', '=', 'transaction_items.variant_id')
                                 ->join('stocks', [
@@ -268,7 +270,10 @@ class TransactionController extends Controller
     }
     public function json_product(){
         $branch_id = Session::get('branch_id');
-        $product = ProductVariant::where('branch_id', $branch_id)->get();
+        $product = ProductVariant::where([
+            ['branch_id', $branch_id],
+            ['status', 'aktif']
+        ])->get();
 
         echo json_encode($product);
     }
@@ -287,8 +292,9 @@ class TransactionController extends Controller
     public function print($id){
         $transaction['detail'] = Transaction::join('branches', 'branches.id', '=', 'transactions.branch_id')
                         ->join('customers', 'customers.id', '=', 'transactions.customer_id')
+                        ->join('sales', 'sales.id', '=', 'transactions.sales_id')
                         ->where('transactions.id', $id)
-                        ->select('transactions.*', DB::raw('branches.name AS branch'), DB::raw('customers.name AS cust_name'), DB::raw('customers.no_telp AS cust_phone'))
+                        ->select('transactions.*', DB::raw('branches.name AS branch'), DB::raw('customers.name AS cust_name'), DB::raw('customers.no_telp AS cust_phone'),DB::raw('sales.name AS sales_name'),DB::raw('sales.phone AS sales_phone'))
                         ->first();
         $transaction['item'] = TransactionItem::join('product_variants', 'product_variants.id', '=', 'transaction_items.variant_id')
                                 ->join('stocks', [

@@ -14,6 +14,9 @@ use PDF;
 
 class ReportController extends Controller
 {
+    public function __construct(){
+        $this->middleware('admin-middleware');
+    }
     public function stock(){
         $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
                     ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
@@ -61,7 +64,6 @@ class ReportController extends Controller
                                 ->first()->total;
         $report['branch'] = Branch::where('id', $id)->first()->name;
         $report['pendapatanlain'] = $request->pendapatanlain;
-        $report['hpp'] = $request->hpp;
         $report['biaya'] = $request->biaya;
         $report['interest'] = $request->interest;
         $report['tax'] = $request->tax;
@@ -79,6 +81,22 @@ class ReportController extends Controller
         $report['hutang_pemegang_saham'] = HutangPiutang::where('category', 'Hutang Pemegang Saham')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
     	$report['piutang'] = HutangPiutang::where('type', 'Piutang')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
     	return view('report/neraca', $report);
+    }
+    public function neraca_print(Request $request){
+        $report['asset'] = Asset::all();
+        $report['kas'] = Account::select(DB::raw('SUM(saldo) AS total'))->first()->total;
+        $report['stock'] = Stock::select(DB::raw('SUM(price*stock) AS stock'))->first()->stock;
+        $report['hutang'] = HutangPiutang::where('type', 'Hutang')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
+        $report['hutang_bank'] = HutangPiutang::where('category', 'Hutang Bank')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
+        $report['hutang_pihak_ketiga'] = HutangPiutang::where('category', 'Hutang Pihak Ketiga')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
+        $report['hutang_pemegang_saham'] = HutangPiutang::where('category', 'Hutang Pemegang Saham')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
+        $report['piutang'] = HutangPiutang::where('type', 'Piutang')->select(DB::raw('SUM(nominal) AS total'))->first()->total;
+        $report['lababerjalan'] = $request->lababerjalan;
+        $report['labaditahan'] = $request->labaditahan;
+        $report['biaya'] = $request->biaya;
+
+        $pdf = PDF::loadview('report/neraca_pdf',$report)->setPaper('A4', 'potrait');
+        return $pdf->stream("NERACA.pdf");
     }
     public function hutang($category, Request $request){
         $tmp = explode("_", $category);

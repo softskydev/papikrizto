@@ -47,6 +47,8 @@ Route::get('/sales/status/{id}/{status}', 'SalesController@set_status');
 Route::resource('variant', 'ProductVariantController');
 Route::get('/variant/status/{id}/{status}', 'ProductVariantController@set_status');
 
+Route::resource('customer', 'CustomerController');
+
 Route::resource('transaction', 'TransactionController');
 Route::get('transaction/json_price/{stock_id}', 'TransactionController@json_price');
 Route::get('transaction/json_stock/{variant_id}/{product_stock_id}', 'TransactionController@json_stock');
@@ -65,7 +67,7 @@ Route::get('report/stock/print/{id}', 'ReportController@stock_print');
 Route::get('report/labarugi', 'ReportController@labarugi');
 Route::post('report/labarugi/print/{id}', 'ReportController@labarugi_print');
 Route::get('report/neraca', 'ReportController@neraca');
-
+Route::post('report/neraca/post', 'ReportController@neraca_print');
 Route::get('report/hutang/{category}', 'ReportController@hutang');
 Route::post('report/hutang/{category}', 'ReportController@hutang');
 

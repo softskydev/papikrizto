@@ -35,12 +35,6 @@ Data stock | Ubiku Dashboard
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
-								<div class="col-sm-10">
-									<input type="number" name="stock" class="form-control" placeholder="Stok" value="{{$detail->stock}}" readonly="">
-                                </div>
-							</div>
-							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Satuan Produk</label>
 								<div class="col-sm-10">
 									<input type="hidden" name="product_stock_id" value="{{$detail->product_stock_id}}">
@@ -52,9 +46,16 @@ Data stock | Ubiku Dashboard
                                 </div>
 							</div>
 							<div class="form-group">
+								<label for="inp-type-1" class="col-sm-2 pull-left">Stok</label>
+								<div class="col-sm-10">
+									<input type="number" name="stock" class="form-control" placeholder="Stok" value="{{$detail->stock}}" readonly="">
+                                </div>
+							</div>
+							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left">Harga Satuan</label>
 								<div class="col-sm-10">
-									<input type="number" name="price" class="form-control" placeholder="Harga Satuan">
+									<input type="number" name="price" class="form-control" placeholder="Harga Satuan" value="{{$price}}" {{($price==0?'':'readonly')}}>
+									<input type="hidden" name="stock_id" value="{{$stock_id}}">
                                 </div>
 							</div>
                             <hr>

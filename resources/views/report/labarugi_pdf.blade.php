@@ -45,17 +45,13 @@
 						<td class="text-right">{{rupiah($labakotor)}}</td>
 					</tr>
 					<tr>
-						<td>HPP</td>
-						<td class="text-right">{{rupiah($hpp)}}</td>
-					</tr>
-					<tr>
 						<td>Biaya</td>
 						<td class="text-right">{{rupiah($biaya)}}</td>
 					</tr>
 					<tr>
 						<th>Laba Sebelum Tax</th>
 						@php
-							$labasebelumtax = $labakotor - ($hpp + $biaya);
+							$labasebelumtax = $labakotor - $biaya;
 						@endphp
 						<td class="text-right">{{rupiah($labasebelumtax)}}</td>
 					</tr>

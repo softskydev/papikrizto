@@ -112,7 +112,7 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        ProductVariant::findOrFail($id)->delete();
+        Admin::findOrFail($id)->delete();
         
         $status = [
             'status' => 'danger',

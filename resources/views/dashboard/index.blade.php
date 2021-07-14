@@ -79,85 +79,27 @@ Data Dashboard | Ubiku Dashboard
 					<table class="table table-striped margin-bottom-10">
 						<thead>
 							<tr>
-								<th style="width:40%;">Product</th>
-								<th>Price</th>
-								<th>Date</th>
-								<th>State</th>
-								<th style="width:5%;"></th>
+								{!!(Session::get("branch_id")==1?"<th>Cabang</th>":"")!!}
+								<th>Customer</th>
+								<th>Tanggal</th>
+								<th>Total Transaksi</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
+							@foreach($latest_transaction AS $latest)
 							<tr>
-								<td>Amaza Themes</td>
-								<td>$71</td>
-								<td>Nov 12,2016</td>
-								<td class="text-success">Completed</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
+								{!!(Session::get("branch_id")==1?"<th>".$latest->branch."</th>":"")!!}
+								<td>{{$latest->customer}}</td>
+								<td>{{format($latest->date)}}</td>
+								<td>{{rupiah($latest->total)}}</td>
+								<td>
+									<a class="btn btn-xs btn-rounded btn-info" href="{{ route('transaction.show' , $latest->id) }}"> 
+										<i class="menu-icon fa fa-eye "> </i> Lihat Invoice 
+									</a>
+								</td>
 							</tr>
-							<tr>
-								<td>Macbook</td>
-								<td>$142</td>
-								<td>Nov 10,2016</td>
-								<td class="text-danger">Cancelled</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Samsung TV</td>
-								<td>$200</td>
-								<td>Nov 01,2016</td>
-								<td class="text-warning">Pending</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Ninja Admin</td>
-								<td>$200</td>
-								<td>Oct 28,2016</td>
-								<td class="text-warning">Pending</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Galaxy Note 5</td>
-								<td>$200</td>
-								<td>Oct 28,2016</td>
-								<td class="text-success">Completed</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>CleanUp Themes</td>
-								<td>$71</td>
-								<td>Oct 22,2016</td>
-								<td class="text-success">Completed</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Facebook WP Plugin</td>
-								<td>$10</td>
-								<td>Oct 15,2016</td>
-								<td class="text-success">Completed</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Iphone 7</td>
-								<td>$100</td>
-								<td>Oct 12,2016</td>
-								<td class="text-warning">Pending</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Nova House</td>
-								<td>$100</td>
-								<td>Oct 12,2016</td>
-								<td class="text-warning">Pending</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							<tr>
-								<td>Repair Cars</td>
-								<td>$35</td>
-								<td>Oct 12,2016</td>
-								<td class="text-warning">Pending</td>
-								<td><a href="#"><i class="fa fa-plus-circle"></i></a></td>
-							</tr>
-							
+							@endforeach
 						</tbody>
 					</table>
 					<!-- /.table -->

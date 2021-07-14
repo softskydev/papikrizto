@@ -37,7 +37,7 @@ Data Satuan Stock | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left"></label>
 								<div class="checkbox col-sm-10">
-									<input type="checkbox" id="chxbox" onchange="prevList()"> <label for="chxbox">Rangkap Stock?</label>
+									<input type="checkbox" id="chxbox" name="rangkap" onchange="prevList()"> <label for="chxbox">Rangkap Stock?</label>
 								</div>
 							</div>
 							
@@ -69,7 +69,7 @@ Data Satuan Stock | Ubiku Dashboard
                             </div>
                             <div class="col-md-6">
                                 <div class="pull-right">
-                                    <a class="btn btn-danger" type="button" href="{{ route('product.index') }}"> Cancel </a>
+                                    <a class="btn btn-danger" type="button" href="{{ route('product_stock.index') }}"> Cancel </a>
                                     <button class="btn btn-success" type="submit"> Simpan </button>
                                 </div>
                             </div>

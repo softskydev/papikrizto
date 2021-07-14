@@ -30,6 +30,24 @@ class DashboardController extends Controller
             'total_customers'   => DB::table('customers')->select(DB::raw('count(*) as total_cust'))
                                                             ->first(),
         ];
+
+        if (Session::get('branch_id') == 1) {
+            $data['latest_transaction'] = Transaction::join("customers", "transactions.customer_id", "=", "customers.id")
+                                ->join("branches", "transactions.branch_id", "=", "branches.id")
+                                ->select(DB::raw("customers.name AS customer"), "transactions.total", "transactions.date", "transactions.id", DB::raw("branches.name AS branch"))
+                                ->orderBy("transactions.date", "desc")
+                                ->limit(10)
+                                ->get();
+        }else{
+            $data['latest_transaction'] = Transaction::join("customers", "transactions.customer_id", "=", "customers.id")
+                                ->join("branches", "transactions.branch_id", "=", "branches.id")
+                                ->where("transactions.branch_id", Session::get('branch_id'))
+                                ->select(DB::raw("customers.name AS customer"), "transactions.total", "transactions.date", "transactions.id", DB::raw("branches.name AS branch"))
+                                ->orderBy("transactions.date", "desc")
+                                ->limit(10)
+                                ->get();
+        }
+
         return view('dashboard.index' , $data);
     }
 

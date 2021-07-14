@@ -51,7 +51,7 @@ Data Transaksi | Ubiku Dashboard
 								<td>{{rupiah($transaction->total)}}</td>
 								<td>
 									<a class="btn btn-xs btn-rounded btn-info" href="{{ route('transaction.show' , $transaction->id) }}"> 
-										<i class="menu-icon fa fa-pencil "> </i> Lihat Invoice 
+										<i class="menu-icon fa fa-eye "> </i> Lihat Invoice 
 									</a>
 									
 									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $transaction->id }}')" > 

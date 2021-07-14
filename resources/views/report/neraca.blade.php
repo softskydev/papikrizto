@@ -10,7 +10,8 @@ Laporan Neraca | Ubiku Dashboard
 	<div class="main-content">
 		<div class="row small-spacing">
 
-        <div class="col-lg-12 col-xs-12">
+        <form class="col-lg-12 col-xs-12" method="post" action="{{action('ReportController@neraca_print')}}">
+        	@csrf
 				<div class="box-content">
 					<h4 class="box-title">Neraca</h4>
 					<!-- /.box-title -->
@@ -42,7 +43,7 @@ Laporan Neraca | Ubiku Dashboard
 									</tr>
 									<tr>
 										<td>Biaya dibayar di muka</td>
-										<td>{{rupiah(0)}}</td>
+										<td>Rp.<input type="number" name="biaya" class="form-control input-sm" value="0" style="width:150px;float:right;"></td>
 									</tr>
 								</table>
 							</td>
@@ -91,11 +92,11 @@ Laporan Neraca | Ubiku Dashboard
 								<table width="100%" class="table table-striped">
 									<tr>
 										<td>Laba Ditahan</td>
-										<td>{{rupiah(0)}}</td>
+										<td>Rp.<input type="number" name="labaditahan" class="form-control input-sm" value="0" style="width:150px;float:right;"></td>
 									</tr>
 									<tr>
 										<td>Laba Berjalan</td>
-										<td>{{rupiah(0)}}</td>
+										<td>Rp.<input type="number" name="lababerjalan" class="form-control input-sm" value="0" style="width:150px;float:right;"></td>
 									</tr>
 								</table>
 							</td>
@@ -103,7 +104,10 @@ Laporan Neraca | Ubiku Dashboard
 					</table>
 				</div>
 				<!-- /.box-content -->
-			</div>
+				<div class="text-right">
+					<button type="submit" class="btn btn-primary waves-effect waves-light"><i class='fa fa-download'></i> Download PDF</button>
+				</div>
+			</form>
     
         </div>
 		
