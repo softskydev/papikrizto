@@ -39,6 +39,18 @@
 									<td>:</td>
 									<td><b>{{$detail->transaction_no}}</b></td>
 								</tr>
+								<tr>									
+									<td>Tanggal Transaksi</td>
+									<td>:</td>
+									<td>
+										<b>{{format($detail->date)}}</b><br>
+										{{$detail->time}}
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td width="50%">
+							<table width="100%" class="noborder">
 								<tr>
 									<td>Customer</td>
 									<td>:</td>
@@ -47,16 +59,12 @@
 										{{$detail->cust_phone}}
 									</td>
 								</tr>
-							</table>
-						</td>
-						<td width="50%">
-							<table width="100%" class="noborder">
-								<tr>									
-									<td>Tanggal Transaksi</td>
+								<tr>
+									<td>Sales</td>
 									<td>:</td>
 									<td>
-										<b>{{format($detail->date)}}</b><br>
-										{{$detail->time}}
+										<b>{{$detail->sales_name}}</b><br>
+										{{$detail->sales_phone}}
 									</td>
 								</tr>	
 							</table>

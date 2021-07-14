@@ -49,7 +49,7 @@ Data Admin | Ubiku Dashboard
                             </div>
                             <div class="col-md-6">
                                 <div class="pull-right">
-                                    <a class="btn btn-danger" type="button" href="{{ route('product.index') }}"> Cancel </a>
+                                    <a class="btn btn-danger" type="button" href="{{ route('admin.index') }}"> Cancel </a>
                                     <button class="btn btn-success" type="submit"> Simpan </button>
                                 </div>
                             </div>

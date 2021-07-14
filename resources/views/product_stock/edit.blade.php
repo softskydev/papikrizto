@@ -28,7 +28,7 @@ Edit Satuan Stock | Ubiku Dashboard
                     @php
                         $check  = ($detail->stock_id == 0) ? ' ' : 'checked';
                     @endphp
-						<form class="form-horizontal" action="{{ route('product_stock.update' , ['product_stock' => $detail->id]) }}" method="POST">
+						<form class="form-horizontal" action="{{ route('product_stock.update', $detail->id) }}" method="POST">
                         @csrf
                             <input type="hidden" name='_method' value="PUT">
 							<div class="form-group">
@@ -41,7 +41,7 @@ Edit Satuan Stock | Ubiku Dashboard
 							<div class="form-group">
 								<label for="inp-type-1" class="col-sm-2 pull-left"></label>
 								<div class="checkbox col-sm-10">
-									<input type="checkbox" {{ $check }} id="chxbox" onchange="prevList()"> <label for="chxbox">Rangkap Stock?</label>
+									<input type="checkbox" {{ $check }} id="chxbox" onchange="prevList()" name="rangkap"> <label for="chxbox">Rangkap Stock?</label>
 								</div>
 							</div>
 							
@@ -61,7 +61,7 @@ Edit Satuan Stock | Ubiku Dashboard
 								<div class="form-group">
 									<label for="inp-type-1" class="col-sm-2 pull-left">Satuan Stock per Item tersebut</label>
 									<div class="col-sm-10">
-										<input type="number" value="{{ $detail->peritem }}" min='1' name="per_stock" class="form-control" id="inp-type-1" >
+										<input type="number" value="{{ $detail->peritem }}" min='0' name="per_stock" class="form-control" id="inp-type-1" >
 									</div>
 								</div>
 							</div>

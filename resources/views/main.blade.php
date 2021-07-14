@@ -275,7 +275,7 @@
 	<h2 class="popup-title">Request Stock</h2>
 	<!-- /.popup-title -->
 	<div class="content">
-		<ul class="notice-list" id="notif-latest">
+		<ul class="notice-list" id="notif-latest" style="max-height: 250px; overflow-y: scroll;">
 			
 		</ul>
 		<!-- /.notice-list -->

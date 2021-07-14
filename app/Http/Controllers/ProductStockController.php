@@ -50,8 +50,8 @@ class ProductStockController extends Controller
     {
         $product = new ProductStock();
         $product->nama_stock = $request->nama_stock;
-        $product->stock_id   = ($request->satuan_id) ? $request->satuan_id : 0;
-        $product->peritem    = ($request->per_stock) ? $request->per_stock : 0;
+        $product->stock_id   = ($request->rangkap) ? $request->satuan_id : 0;
+        $product->peritem    = ($request->rangkap) ? $request->per_stock : 0;
         $product->save();
 
         $status = [
@@ -83,7 +83,7 @@ class ProductStockController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -95,7 +95,18 @@ class ProductStockController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = ProductStock::find($id);
+        $product->nama_stock = $request->nama_stock;
+        $product->stock_id   = ($request->rangkap) ? $request->satuan_id : 0;
+        $product->peritem    = ($request->rangkap) ? $request->per_stock : 0;
+        $product->save();
+
+        $status = [
+            'status' => 'success',
+            'msg' => 'Data berhasil di simpan'
+        ];
+
+        return redirect()->route('product_stock.index')->with( $status );
     }
 
     /**
@@ -106,6 +117,13 @@ class ProductStockController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ProductStock::findOrFail($id)->delete();
+        
+        $status = [
+            'status' => 'danger',
+            'msg' => 'Data berhasil di hapus'
+        ];
+
+        echo json_encode($status);
     }
 }

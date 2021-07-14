@@ -39,7 +39,9 @@ Data Stok | Ubiku Dashboard
 								<th>Harga Satuan</th>
 								<th>Stok</th>
 								<th>Satuan</th>
+								@if(Session::get('branch_id') == 1)
 								<th>Action</th> 
+								@endif
 							</tr> 
 						</thead> 
 						<tbody> 
@@ -53,10 +55,12 @@ Data Stok | Ubiku Dashboard
 								<td>{{$stock->stock}}</td>
 								<td>{{$stock->product_stock}}</td>
 								<td>
+									@if(Session::get('branch_id') == 1)
 									<a class="btn btn-xs btn-rounded btn-warning" href="{{route('stock.show', $stock->id)}}"> 
 										<i class="menu-icon fa fa-edit "> </i> Edit Stok
 									</a>
 									<button class="btn btn-xs btn-rounded btn-danger" onclick="doDelete('{{ $stock->id }}', '{{$stock->variant_id}}')"><i class="menu-icon fa fa-trash"></i> Hapus Stok</button>
+									@endif
 								</td> 
 							</tr>
 						@empty
