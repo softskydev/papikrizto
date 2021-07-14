@@ -72,5 +72,6 @@ Route::post('report/hutang/{category}', 'ReportController@hutang');
 
 // ajax ?
 
-Route::get('notif/load/', 'NotifController@load_notif_all');
+Route::get('notif-load', 'NotifController@load_notif');
 Route::get('request-load', 'NotifController@load_request');
+Route::post('seen', 'NotifController@update_seen');

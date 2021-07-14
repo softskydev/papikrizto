@@ -121,13 +121,13 @@ class StockController extends Controller
             $notification = new Notification;
             $notification->branch_id = $variant->branch_id;
             $notification->source_id = $variant->id;
-            $notification->routes = "/stocks/detail/";
+            $notification->routes = "/stock/detail/";
             $notification->title = "Stok Diperbarui";
             $notification->subtitle = $variant->variant_name;
             $notification->seen = 0;
             $notification->save();
 
-            PusherFactory::make()->trigger('request', 'item-loaded', ['status' => 200 , 'msg' => 'load_notif' ]);
+            PusherFactory::make()->trigger('request', 'item-loaded', ['status' => 200 , 'msg' => 'load_notif' , 'branch_id' => $variant->branch_id ]);
 
         }else{ // other branch
 
@@ -229,6 +229,9 @@ class StockController extends Controller
         $notification->subtitle = $variant->variant_name;
         $notification->seen = 0;
         $notification->save();
+
+        PusherFactory::make()->trigger('request', 'item-loaded', ['status' => 200 , 'msg' => 'load_notif' ]);
+
 
         $status = [
             'status' => 'info',
