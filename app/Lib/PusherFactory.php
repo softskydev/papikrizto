@@ -7,11 +7,11 @@ class PusherFactory
     public static function make()
     {
         return new Pusher(
-            env("PUSHER_APP_KEY"), // public key
-            env("PUSHER_APP_SECRET"), // Secret
-            env("PUSHER_APP_ID"), // App_id
+            "3c2eb066d5763d84c773", // public key
+            "883882abc5606c600edf", // Secret
+            "1233061", // App_id
             array(
-                'cluster' => env("PUSHER_APP_CLUSTER"), // Cluster
+                'cluster' => "ap1", // Cluster
                 'encrypted' => true,
             )
         );

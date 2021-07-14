@@ -9,6 +9,8 @@ use App\Branch;
 use App\ProductVariant;
 use App\Stock;
 use App\StockHistory;
+use App\Notification;
+use App\Lib\PusherFactory;
 use Illuminate\Support\Facades\DB;
 
 
@@ -66,6 +68,20 @@ class StockRequestController extends Controller
         $req['detail'] = StockRequest::where('id', $id)->first();
         $branch_id = $req['detail']->branch_id;
 
+        $stock = Stock::where([
+            ['variant_id', '=', $req['detail']->variant_id],
+            ['product_stock_id', '=', $req['detail']->product_stock_id],
+            ['stock', '>', 0]
+        ])->first();
+
+        if ($stock) {
+            $req['stock_id'] = $stock->id;
+            $req['price'] = $stock->price;
+        }else{
+            $req['stock_id'] = 0;
+            $req['price'] = '';
+        }
+
         $req['product_stock_data'] = ProductStock::all();
         $req['variant'] = ProductVariant::where('id', $req['detail']->variant_id)->first();
 
@@ -92,33 +108,70 @@ class StockRequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $stock = new Stock;
-        $stock->variant_id = $request->variant_id;
-        $stock->product_stock_id = $request->product_stock_id;
-        $stock->price = $request->price;
-        $stock->stock = $request->stock;
+        if ($request->stock_id == 0) {
+            $stock = new Stock;
+            $stock->variant_id = $request->variant_id;
+            $stock->product_stock_id = $request->product_stock_id;
+            $stock->price = $request->price;
+            $stock->stock = $request->stock;
 
-        $product_stock_id = $stock->product_stock_id;
-        $ps = ProductStock::where('id', $product_stock_id)->first();
-        $parent_id = $ps->stock_id;
-        $peritem = $ps->peritem;
-        $real_stock = $stock->stock;
-        if ($parent_id != 0){
-            while ($parent_id > 0) {
-                $real_stock *= $peritem;
-                $ps = ProductStock::where('id', $parent_id)->first();
-                $parent_id = $ps->stock_id;
-                $peritem = $ps->peritem;
+            $product_stock_id = $stock->product_stock_id;
+            $ps = ProductStock::where('id', $product_stock_id)->first();
+            $parent_id = $ps->stock_id;
+            $peritem = $ps->peritem;
+            $real_stock = $stock->stock;
+            if ($parent_id != 0){
+                while ($parent_id > 0) {
+                    $real_stock *= $peritem;
+                    $ps = ProductStock::where('id', $parent_id)->first();
+                    $parent_id = $ps->stock_id;
+                    $peritem = $ps->peritem;
+                }
             }
+            $stock->real_stock = $real_stock;
+            $stock->save();
+        }else{
+            $stock = Stock::find($request->stock_id);
+            $stock->variant_id = $request->variant_id;
+            $stock->product_stock_id = $request->product_stock_id;
+            $stock->stock += $request->stock;
+
+            $product_stock_id = $stock->product_stock_id;
+            $ps = ProductStock::where('id', $product_stock_id)->first();
+            $parent_id = $ps->stock_id;
+            $peritem = $ps->peritem;
+            $real_stock = $stock->stock;
+            if ($parent_id != 0){
+                while ($parent_id > 0) {
+                    $real_stock *= $peritem;
+                    $ps = ProductStock::where('id', $parent_id)->first();
+                    $parent_id = $ps->stock_id;
+                    $peritem = $ps->peritem;
+                }
+            }
+            $stock->real_stock += $real_stock;
+
+            $stock->save();
         }
-        $stock->real_stock = $real_stock;
-        $stock->save();
 
         $stock_history = new StockHistory;
         $stock_history->stock_id = $stock->id;
         $stock_history->status = 'masuk';
         $stock_history->quantity = $request->stock;
         $stock_history->save();
+
+        $variant = ProductVariant::where('id', $request->variant_id)->first();
+
+        $notification = new Notification;
+        $notification->branch_id = $variant->branch_id;
+        $notification->source_id = $variant->id;
+        $notification->routes = "/stock/detail/";
+        $notification->title = "Stok Diperbarui";
+        $notification->subtitle = $variant->variant_name;
+        $notification->seen = 0;
+        $notification->save();
+
+        PusherFactory::make()->trigger('request', 'item-loaded', ['status' => 200 , 'msg' => 'load_notif' , 'branch_id' => $variant->branch_id ]);
 
         $status = [
             'status' => 'success',

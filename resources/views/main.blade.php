@@ -197,6 +197,9 @@
 				<li {!!(Request::segment(1)=='sales'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('sales.index') }}"><i class="menu-icon ti-comments-smiley"></i><span>Sales</span></a>
 				</li>
+				<li {!!(Request::segment(1)=='customer'?'class="current active"':'')!!}>
+					<a class="waves-effect" href="{{ route('customer.index') }}"><i class="menu-icon ti-user"></i><span>Customer</span></a>
+				</li>
 				<li {!!(Request::segment(1)=='transaction'?'class="current active"':'')!!}>
 					<a class="waves-effect" href="{{ route('transaction.index') }}"><i class="menu-icon ti-receipt"></i><span>Transaksi</span></a>
 				</li>

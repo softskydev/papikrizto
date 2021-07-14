@@ -100,6 +100,7 @@ class TransactionController extends Controller
             $customer = new Customer;
             $customer->name = $cust_name;
             $customer->no_telp = $cust_phone;
+            $customer->branch_id = Session::get('branch_id');
             $customer->save();
             $customer_id = $customer->id;
         }else{
