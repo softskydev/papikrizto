@@ -11,6 +11,7 @@ use App\Stock;
 use App\StockHistory;
 use Illuminate\Support\Facades\DB;
 
+
 class StockRequestController extends Controller
 {
     public function __construct(){

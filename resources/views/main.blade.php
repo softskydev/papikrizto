@@ -41,6 +41,7 @@
 	
 	<!-- SWeet alert -->
 	<link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+	<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
 	<!-- DateRangepicker -->
 	<link rel="stylesheet" href="{{url('app-assets/plugin/daterangepicker/daterangepicker.css')}}">
@@ -52,7 +53,105 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 	<script>
 		const global_url = '{{ url("") }}';
-		const token = '{{ csrf_token() }}';
+		const token      = '{{ csrf_token() }}';
+		const branch_id  = '{{ Session::get('branch_id') }}';
+		const audio      = new Audio('{{ asset("app-assets/notif.mp3") }}');
+		var pusher       = new Pusher('3c2eb066d5763d84c773', {
+			cluster : 'ap1'
+		});
+		Pusher.logToConsole = true;
+
+		if (branch_id == '1') {
+			var tipe_request = 'request';
+			load_request_ajax();
+
+			var request = pusher.subscribe('request');
+			request.bind('req-item', function(data) {
+				if(data.status == 200){
+					notif_request();
+				}
+			});
+
+			
+		} else {
+			var tipe_request = 'notif';
+			load_notif_ajax();
+
+			var channel = pusher.subscribe('request');
+				channel.bind('item-loaded', function(data) {
+				if (data.branch_id == branch_id) {
+					notif_update_stock();
+				}
+			});
+
+		}
+
+		function notif_request(){
+			toastr.info("Ada Request dari Cabang lain");
+			audio.play();
+			load_request_ajax();
+		}
+
+		function notif_update_stock(){
+			toastr.info("Stock Sudah di perbarui Admin");
+			audio.play();
+			load_notif_ajax();
+		}
+
+		function load_request_ajax(){
+			$.ajax({
+                url:  global_url + '/request-load',
+                method: 'GET',
+                data: {
+                    _token : token
+                },
+                dataType : 'json',
+                success:function(datas){
+                    $("#notif-latest").html(datas.data);
+					if (datas.new_request>0) {
+						$("#label_notif").show();
+						$("#count_notif").html(datas.new_request);
+					}
+                }
+            });
+		}
+
+		function load_notif_ajax(){
+			// alert('asem')
+			$.ajax({
+                url:  global_url + '/notif-load',
+                method: 'GET',
+                data: {
+                    _token : token
+                },
+                dataType : 'json',
+                success:function(datas){
+                    $("#notif-latest").html(datas.data);
+					if (datas.new_notif>0) {
+						$("#label_notif").show();
+						$("#count_notif").html(datas.new_notif);
+					}
+                }
+            });
+		}
+
+		function trigger_read_notif(){
+
+			$.ajax({
+                url:  global_url + '/seen',
+                method: 'POST',
+                data: {
+                    _token : token,
+					request: tipe_request,
+                },
+                dataType : 'json',
+                success:function(datas){
+				   $("#label_notif").hide();
+                }
+            });
+			
+		}
+
 	</script>
 
 	{{-- Datatatable --}}
@@ -152,8 +251,8 @@
 	<div class="pull-right">
 		
 		<!-- /.ico-item -->
-		<a href="#" class="ico-item ti-bell notice-alarm js__toggle_open" data-target="#notification-popup"></a>
-		<div class="badge bg-warning" style="margin-left: -10px; margin-top: -10px; padding:2px 5px; font-size: 10px;">1</div>
+		<a href="#" onclick="trigger_read_notif()" class="ico-item ti-bell notice-alarm js__toggle_open" data-target="#notification-popup"></a>
+		<div class="badge bg-warning" id="label_notif"  style="display:none;margin-left: -10px; margin-top: -10px; padding:2px 5px; font-size: 10px;"><span id='count_notif'></span></div>
 		<div class="ico-item">
 			<i class="ti-user"></i>
 			<ul class="sub-ico-item">
@@ -173,36 +272,8 @@
 	<h2 class="popup-title">Request Stock</h2>
 	<!-- /.popup-title -->
 	<div class="content">
-		<ul class="notice-list">
-			@if(Session::get('branch_id') == 1)
-				@forelse($req AS $notif)
-					<li>
-						<a href="{{route('request.show', $notif->id)}}">
-							<span class="avatar bg-primary"><i class="menu-icon ti-package"></i></span>
-							<span class="name">{{$notif->branch}}</span>
-							<span class="desc">Request : {{$notif->variant}} ({{$notif->stock}} {{$notif->satuan}})</span>
-							{{-- <span class="time">10 min</span> --}}
-						</a>
-					</li>
-				@empty
-				<li class="text-center">Tidak ada notifikasi.</li>
-				@endforelse
-			@else
-				@forelse($notification AS $notif)
-					@if($notif->branch_id == Session::get('branch_id'))
-					<li>
-						<a href="{{$notif->routes}}{{$notif->source_id}}">
-							<span class="avatar bg-primary"><i class="menu-icon ti-package"></i></span>
-							<span class="name">{{$notif->title}}</span>
-							<span class="desc">{{$notif->subtitle}}</span>
-							{{-- <span class="time">10 min</span> --}}
-						</a>
-					</li>
-					@endif
-				@empty
-				<li class="text-center">Tidak ada notifikasi.</li>
-				@endforelse
-			@endif
+		<ul class="notice-list" id="notif-latest">
+			
 		</ul>
 		<!-- /.notice-list -->
 		<a href="{{route('request.index')}}" class="notice-read-more">Tampilkan semua <i class="fa fa-angle-down"></i></a>
@@ -252,13 +323,17 @@
 	<!-- Chartist Chart -->
 	<script src="{{ url('app-assets/plugin/chart/chartist/chartist.min.js') }}"></script>
 	<script src="{{ url('app-assets/scripts/jquery.chartist.init.min.js') }}"></script>
-
+	
 	<!-- FullCalendar -->
 	<script src="{{ url('app-assets/plugin/moment/moment.js') }}"></script>
 	<script src="{{ url('app-assets/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
 	<script src="{{ url('app-assets/scripts/fullcalendar.init.js') }}"></script>
 
 	<script src="{{ url('app-assets/scripts/main.min.js') }}"></script>
+
+	<!-- Notification JS -->
+	<script src="{{ url('app-assets/scripts/notification.js') }}"></script>
+
 
 	<!-- Data Tables -->
 	<script src="{{url('app-assets/plugin/datatables/media/js/jquery.dataTables.min.js')}}"></script>

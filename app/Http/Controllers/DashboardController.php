@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Notification;
 use Session;
+
 
 class DashboardController extends Controller
 {
@@ -17,8 +20,17 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('dashboard.index');
+    {   
+        $session_id = session('branch_id');
+        $data = [
+            'transactions'      => DB::select('select date ,sum(total) as total_transaction from transactions where branch_id = ? group by date ' , [$session_id] ),
+            'total_transactions' => DB::table('transactions')->where('branch_id' , $session_id)
+                                                            ->select(DB::raw('sum(total) as total_transction'))
+                                                            ->first(),
+            'total_customers'   => DB::table('customers')->select(DB::raw('count(*) as total_cust'))
+                                                            ->first(),
+        ];
+        return view('dashboard.index' , $data);
     }
 
     /**

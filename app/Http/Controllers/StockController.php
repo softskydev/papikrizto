@@ -13,6 +13,7 @@ use App\StockRequest;
 use App\Notification;
 use Session;
 use Illuminate\Support\Facades\DB;
+use App\Lib\PusherFactory;
 
 class StockController extends Controller
 {
@@ -58,8 +59,12 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        if (Session::get('branch_id') == 1) {
+
+        $branch_id = Session::get('branch_id');
+        if ($branch_id == 1) { // admin ubiku
             if ($request->stock_id == 0) {
+
+
                 $stock = new Stock;
                 $stock->variant_id = $request->variant_id;
                 $stock->product_stock_id = $request->product_stock_id;
@@ -116,18 +121,25 @@ class StockController extends Controller
             $notification = new Notification;
             $notification->branch_id = $variant->branch_id;
             $notification->source_id = $variant->id;
-            $notification->routes = "/stocks/detail/";
+            $notification->routes = "/stock/detail/";
             $notification->title = "Stok Diperbarui";
             $notification->subtitle = $variant->variant_name;
             $notification->seen = 0;
             $notification->save();
-        }else{
+
+            PusherFactory::make()->trigger('request', 'item-loaded', ['status' => 200 , 'msg' => 'load_notif' , 'branch_id' => $variant->branch_id ]);
+
+        }else{ // other branch
+
+
             $req = new StockRequest;
             $req->variant_id = $request->variant_id;
             $req->product_stock_id = $request->product_stock_id;
             $req->stock = $request->stock;
             $req->branch_id = Session::get('branch_id');
             $req->save();
+
+            PusherFactory::make()->trigger('request', 'req-item', ['status' => 200 , 'msg' => 'load_notif' ]);
         }
 
         $status = [
@@ -217,6 +229,9 @@ class StockController extends Controller
         $notification->subtitle = $variant->variant_name;
         $notification->seen = 0;
         $notification->save();
+
+        PusherFactory::make()->trigger('request', 'item-loaded', ['status' => 200 , 'msg' => 'load_notif' ]);
+
 
         $status = [
             'status' => 'info',

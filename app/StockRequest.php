@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockRequest extends Model
 {
-    //
+    protected $fillable = ['seen'];
 }

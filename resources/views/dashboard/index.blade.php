@@ -2,6 +2,7 @@
 
 @section('title')
 Data Dashboard | Ubiku Dashboard
+
 @endsection
 
 @section('content')
@@ -11,8 +12,8 @@ Data Dashboard | Ubiku Dashboard
 			<div class="col-lg-3 col-xs-12">
 				<div class="box-content">
 					<div class="statistics-box with-icon">
-						<i class="ico ti-apple text-inverse"></i>
-						<h2 class="counter text-inverse">2561</h2>
+						<i class="ico ti-shopping-cart text-inverse"></i>
+						<h2 class="counter text-inverse">{{ number_format($total_transactions->total_transction) }}</h2>
 						<p class="text">Total Transaksi</p>
 					</div>
 					<!-- .statistics-box .with-icon -->
@@ -21,9 +22,9 @@ Data Dashboard | Ubiku Dashboard
 
 				<div class="box-content">
 					<div class="statistics-box with-icon">
-						<i class="ico ti-android text-success"></i>
-						<h2 class="counter text-success">3562</h2>
-						<p class="text">Visitors</p>
+						<i class="ico ti-user text-success"></i>
+						<h2 class="counter text-success">{{ ($total_customers->total_cust) }}</h2>
+						<p class="text">Total Customers</p>
 					</div>
 					<!-- .statistics-box .with-icon -->
 				</div>
@@ -42,21 +43,9 @@ Data Dashboard | Ubiku Dashboard
 			<!-- /.col-lg-3 col-xs-12 -->
 			<div class="col-lg-9 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Statistics</h4>
-					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else there</a></li>
-							<li class="split"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
-					<!-- /.dropdown js__dropdown -->
-					<div id="svg-animation-chartist-chart" class="chartist-chart" style="height: 314px"></div>
+					<h4 class="box-title">Transaksi Penjualan ({{ session('name') }})</h4>
+				
+					<canvas id="myChart" width="400" height="170"></canvas>
 					<!-- /#svg-animation-chartist-chart.chartist-chart -->
 				</div>
 				<!-- /.box-content -->
@@ -65,235 +54,15 @@ Data Dashboard | Ubiku Dashboard
 		</div>
 		<!-- /.row small-spacing -->
 
-		<div class="row small-spacing">
-
-			<div class="col-lg-4 col-xs-12">
-				<div class="box-content">
-					<h4 class="box-title text-info">Site Traffic</h4>
-					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else there</a></li>
-							<li class="split"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
-					<!-- /.dropdown js__dropdown -->
-					<div class="content widget-stat">
-						<div id="traffic-sparkline-chart-1" class="left-content margin-top-15"></div>
-						<!-- /#traffic-sparkline-chart-1 -->
-						<div class="right-content">
-							<h2 class="counter text-info">278</h2>
-							<!-- /.counter -->
-							<p class="text text-info">Visitors Income</p>
-							<!-- /.text -->
-						</div>
-						<!-- .right-content -->
-					</div>
-					<!-- /.content widget-stat -->
-				</div>
-				<!-- /.box-content -->
-			</div>
-			<!-- /.col-lg-4 col-xs-12 -->
-
-			<div class="col-lg-4 col-xs-12">
-				<div class="box-content">
-					<h4 class="box-title text-success">Trade Traffic</h4>
-					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else there</a></li>
-							<li class="split"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
-					<!-- /.dropdown js__dropdown -->
-					<div class="content widget-stat">
-						<div id="traffic-sparkline-chart-2" class="left-content margin-top-10"></div>
-						<!-- /#traffic-sparkline-chart-2 -->
-						<div class="right-content">
-							<h2 class="counter text-success">36%</h2>
-							<!-- /.counter -->
-							<p class="text text-success">Total Income</p>
-							<!-- /.text -->
-						</div>
-						<!-- .right-content -->
-					</div>
-					<!-- /.content widget-stat -->
-				</div>
-				<!-- /.box-content -->
-			</div>
-			<!-- /.col-lg-4 col-xs-12 -->
-
-			<div class="col-lg-4 col-xs-12">
-				<div class="box-content">
-					<h4 class="box-title text-success">Sales Traffic</h4>
-					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else there</a></li>
-							<li class="split"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
-					<!-- /.dropdown js__dropdown -->
-					<div class="content widget-stat">
-						<div id="traffic-sparkline-chart-3" class="left-content"></div>
-						<!-- /#traffic-sparkline-chart-3 -->
-						<div class="right-content">
-							<h2 class="counter text-danger">849 <i class="fa fa-usd"></i></h2>
-							<!-- /.counter -->
-							<p class="text text-danger">Credit Earned</p>
-							<!-- /.text -->
-						</div>
-						<!-- .right-content -->
-					</div>
-					<!-- /.content widget-stat -->
-				</div>
-				<!-- /.box-content -->
-			</div>
-			<!-- /.col-lg-4 col-xs-12 -->
-		</div>
-		<!-- /.row small-spacing -->
+		
 
 		<div class="row small-spacing">
-			<div class="col-lg-4 col-xs-12">
-				<div class="box-content">
-					<h4 class="box-title">Activity</h4>
-					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else there</a></li>
-							<li class="split"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
-					<!-- /.dropdown js__dropdown -->
-					<div class="activity-list">
-						<div class="activity-item">
-							<div class="bar bg-primary">
-								<div class="dot bg-primary"></div>
-								<!-- /.dot -->
-							</div>
-							<!-- /.bar -->
-							<div class="content">
-								<div class="date">10 min</div>
-								<!-- /.date -->
-								<div class="text">
-									Harry has finished "Amaza HTML" task
-								</div>
-								<!-- /.text -->
-							</div>
-							<!-- /.content -->
-						</div>
-						<!-- /.activity-item -->
-						<div class="activity-item">
-							<div class="bar bg-danger">
-								<div class="dot bg-danger"></div>
-								<!-- /.dot -->
-							</div>
-							<!-- /.bar -->
-							<div class="content">
-								<div class="date">15 min</div>
-								<!-- /.date -->
-								<div class="text">
-									You completed your task
-								</div>
-								<!-- /.text -->
-							</div>
-							<!-- /.content -->
-						</div>
-						<!-- /.activity-item -->
-						<div class="activity-item">
-							<div class="bar bg-success">
-								<div class="dot bg-success"></div>
-								<!-- /.dot -->
-							</div>
-							<!-- /.bar -->
-							<div class="content">
-								<div class="date">30 min</div>
-								<!-- /.date -->
-								<div class="text">
-									New updated has been installed
-								</div>
-								<!-- /.text -->
-							</div>
-							<!-- /.content -->
-						</div>
-						<!-- /.activity-item -->
-						<div class="activity-item">
-							<div class="bar bg-violet">
-								<div class="dot bg-violet"></div>
-								<!-- /.dot -->
-							</div>
-							<!-- /.bar -->
-							<div class="content">
-								<div class="date">1 hour ago</div>
-								<!-- /.date -->
-								<div class="text">Write some comments</div>
-								<!-- /.text -->
-							</div>
-							<!-- /.content -->
-						</div>
-						<!-- /.activity-item -->
-						<div class="activity-item">
-							<div class="bar bg-warning">
-								<div class="dot bg-warning"></div>
-								<!-- /.dot -->
-							</div>
-							<!-- /.bar -->
-							<div class="content">
-								<div class="date">1 day ago</div>
-								<!-- /.date -->
-								<div class="text">4 friends request accepted</div>
-								<!-- /.text -->
-							</div>
-							<!-- /.content -->
-						</div>
-						<!-- /.activity-item -->
-						<div class="activity-item">
-							<div class="bar bg-orange">
-								<div class="dot bg-orange"></div>
-								<div class="last-dot bg-orange"></div>
-								<!-- /.dot -->
-							</div>
-							<!-- /.bar -->
-							<div class="content">
-								<div class="date">12 days ago</div>
-								<!-- /.date -->
-								<div class="text">Daisy has joined your team</div>
-								<!-- /.text -->
-							</div>
-							<!-- /.content -->
-						</div>
-						<!-- /.activity-item -->
-					</div>
-					<!-- /.activity-list -->
-					<a href="#" class="activity-link">View all activity <i class="fa fa-angle-down"></i></a>
-				</div>
-				<!-- /.box-content -->
-			</div>
+		
 			<!-- /.col-lg-4 col-xs-12 -->
 
-			<div class="col-lg-8 col-xs-12">
+			<div class="col-lg-12 col-xs-12">
 				<div class="box-content">
-					<h4 class="box-title">Purchases</h4>
+					<h4 class="box-title">Last Transaction</h4>
 					<!-- /.box-title -->
 					<div class="dropdown js__drop_down">
 						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -407,6 +176,56 @@ Data Dashboard | Ubiku Dashboard
 			</ul>
 		</footer>
 	</div>
+	
 	<!-- /.main-content -->
 </div><!--/#wrapper -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [
+			
+			@foreach($transactions as $rowz)
+				'{{ format($rowz->date) }}' ,
+			@endforeach
+		],
+        datasets: [{
+            label: 'Penjualan per Hari',
+            data: [
+				@foreach($transactions as $row)
+					{{ $row->total_transaction . ', ' }} 
+				@endforeach
+			],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script>
 @endsection
+<!-- <script src="{{ url('js/chartjs.js') }}"></script> -->

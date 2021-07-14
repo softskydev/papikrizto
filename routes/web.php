@@ -68,3 +68,10 @@ Route::get('report/neraca', 'ReportController@neraca');
 Route::post('report/neraca/post', 'ReportController@neraca_print');
 Route::get('report/hutang/{category}', 'ReportController@hutang');
 Route::post('report/hutang/{category}', 'ReportController@hutang');
+
+
+// ajax ?
+
+Route::get('notif-load', 'NotifController@load_notif');
+Route::get('request-load', 'NotifController@load_request');
+Route::post('seen', 'NotifController@update_seen');
