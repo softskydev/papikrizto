@@ -64,26 +64,21 @@
 		if (branch_id == '1') {
 			var tipe_request = 'request';
 			load_request_ajax();
-
 			var request = pusher.subscribe('request');
 			request.bind('req-item', function(data) {
 				if(data.status == 200){
 					notif_request();
 				}
-			});
-
-			
+			});	
 		} else {
 			var tipe_request = 'notif';
 			load_notif_ajax();
-
 			var channel = pusher.subscribe('request');
 				channel.bind('item-loaded', function(data) {
 				if (data.branch_id == branch_id) {
 					notif_update_stock();
 				}
 			});
-
 		}
 
 		function notif_request(){
@@ -108,16 +103,15 @@
                 dataType : 'json',
                 success:function(datas){
                     $("#notif-latest").html(datas.data);
-					if (datas.new_request>0) {
-						$("#label_notif").show();
-						$("#count_notif").html(datas.new_request);
-					}
-                }
+						if (datas.new_request>0) {
+							$("#label_notif").show();
+							$("#count_notif").html(datas.new_request);
+						}
+               		}
             });
 		}
 
 		function load_notif_ajax(){
-			// alert('asem')
 			$.ajax({
                 url:  global_url + '/notif-load',
                 method: 'GET',
@@ -136,7 +130,6 @@
 		}
 
 		function trigger_read_notif(){
-
 			$.ajax({
                 url:  global_url + '/seen',
                 method: 'POST',
@@ -149,7 +142,6 @@
 				   $("#label_notif").hide();
                 }
             });
-			
 		}
 
 	</script>
