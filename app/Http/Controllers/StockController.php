@@ -70,6 +70,7 @@ class StockController extends Controller
                 $stock->product_stock_id = $request->product_stock_id;
                 $stock->price = $request->price;
                 $stock->stock = $request->stock;
+                $stock->admin_id = Session::get('id');
 
                 $product_stock_id = $stock->product_stock_id;
                 $ps = ProductStock::where('id', $product_stock_id)->first();
@@ -193,6 +194,7 @@ class StockController extends Controller
         $stock->product_stock_id = $request->product_stock_id;
         $stock->price = $request->price;
         $stock->stock = $request->stock;
+        $stock->admin_id = Session::get('id');
 
         $product_stock_id = $stock->product_stock_id;
         $ps = ProductStock::where('id', $product_stock_id)->first();

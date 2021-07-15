@@ -233,6 +233,7 @@ class TransactionController extends Controller
 
             $stock = Stock::find($i->stock_id);
             $stock->stock = $s->stock + $i->quantity;
+            $stock->admin_id = Session::get('id');
             $stock->save();
 
             $stock_history = new StockHistory;
