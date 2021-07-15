@@ -92,6 +92,7 @@ class StockController extends Controller
                 $stock->variant_id = $request->variant_id;
                 $stock->product_stock_id = $request->product_stock_id;
                 $stock->stock += $request->stock;
+                $stock->admin_id = Session::get('id');
 
                 $product_stock_id = $stock->product_stock_id;
                 $ps = ProductStock::where('id', $product_stock_id)->first();
