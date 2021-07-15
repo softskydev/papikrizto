@@ -262,11 +262,12 @@ class StockController extends Controller
     public function detail($variant_id){
         $stock['detail'] = Stock::join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
                     ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                    ->join('admins', 'admins.id', '=', 'stocks.admin_id')
                     ->where([
                         ['stocks.variant_id','=', $variant_id],
                         ['stocks.stock', '>', 0]
                     ])
-                    ->select('stocks.*', 'product_variants.variant_name AS variant', 'product_stocks.nama_stock AS product_stock', 'product_variants.product_code')
+                    ->select('stocks.*', 'admins.username AS admin', 'product_variants.variant_name AS variant', 'product_stocks.nama_stock AS product_stock', 'product_variants.product_code')
                     ->get();
         $stock['variant_id'] = $variant_id;
         return view('stocks.detail', $stock);

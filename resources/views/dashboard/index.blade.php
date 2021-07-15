@@ -32,9 +32,9 @@ Data Dashboard | Ubiku Dashboard
 
 				<div class="box-content">
 					<div class="statistics-box with-icon">
-						<i class="ico ti-user text-primary"></i>
-						<h2 class="counter text-primary">283</h2>
-						<p class="text">Members</p>
+						<i class="ico ti-comments-smiley text-primary"></i>
+						<h2 class="counter text-primary">{{ $total_sales->total_sales }}</h2>
+						<p class="text">Total Sales</p>
 					</div>
 					<!-- .statistics-box .with-icon -->
 				</div>

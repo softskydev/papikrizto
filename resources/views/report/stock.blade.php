@@ -14,13 +14,27 @@ Laporan Stock | Ubiku Dashboard
 				<div class="box-content">
 					<h4 class="box-title">Laporan Stock</h4>
 					<!-- /.box-title -->
-					<div class="dropdown js__drop_down">
-						<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-						<ul class="sub-menu">
-							
-						</ul>
-						<!-- /.sub-menu -->
-					</div>
+					<form class="form-group" method="post" action="{{action('ReportController@stock')}}">
+						@csrf
+						<label class="control-label col-sm-2">Periode : </label>
+						<div class="col-sm-4">
+							<div class="input-daterange input-group" id="date-range" data-date-format='yyyy-mm-dd'>
+								<input type="text" class="form-control input-sm" name="start" required="" placeholder="Tanggal Awal" {{$start!=0?"value='".$start."'":""}} />
+								<span class="input-group-addon bg-default">-</span>
+								<input type="text" class="form-control input-sm" name="end" required="" placeholder="Tanggal Akhir" {{$end!=0?"value='".$end."'":""}} />
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<button class="btn btn-info btn-xs btn-block" type="submit">Filter</button>
+						</div>
+						<div class="col-sm-2">
+							<a href="/report/stock" class="btn btn-default btn-xs btn-block">Tampilkan Semua</a>
+						</div>
+						
+						<div class="col-sm-12">
+							<hr>
+						</div>
+					</form>
 
 					<ul class="nav nav-tabs" id="myTabs" role="tablist" style="margin-top: 20px;">
 						@php $tno = 1 @endphp
@@ -41,9 +55,11 @@ Laporan Stock | Ubiku Dashboard
 								<thead>
 									<tr>
 										<th>#</th>
+										<th>Tanggal</th>
 										<th>Kode Produk</th>
-										<th width='40%'>Varian Produk</th>  
-										<th>Stok</th>
+										<th>Varian Produk</th>
+										<th>Masuk</th>
+										<th>Keluar</th>
 										<th>Satuan</th>
 									</tr> 
 								</thead> 
@@ -53,9 +69,11 @@ Laporan Stock | Ubiku Dashboard
 									@if($s->branch_id == $b->id)
 									<tr> 
 										<th scope="row">{{ $no++ }}</th> 
+										<td>{{f_datestamp($s->created_at)}}</td>
 										<td>{{$s->product_code}}</td>
-										<td>{{$s->variant}}</td>
-										<td>{{$s->stock}}</td>
+										<td>{{$s->variant_name}}</td>
+										<td>{{$s->status=='masuk'?$s->quantity:'-'}}</td>
+										<td>{{$s->status=='keluar'?$s->quantity:'-'}}</td>
 										<td>{{$s->nama_stock}}</td>
 									</tr>
 									@endif
@@ -69,7 +87,7 @@ Laporan Stock | Ubiku Dashboard
 								</tbody> 
 							</table>
 							<div class="text-right">
-								<a href="/report/stock/print/{{$b->id}}" type="button" class="btn btn-primary waves-effect waves-light"><i class='fa fa-download'></i> Download PDF</a>
+								<a href="/report/stock/print/{{$b->id}}/{{$start}}/{{$end}}" class="btn btn-primary waves-effect waves-light"><i class='fa fa-download'></i> Download PDF</a>
 							</div>
 						</div>
 						@php $tno++ @endphp
@@ -93,5 +111,5 @@ Laporan Stock | Ubiku Dashboard
 @endsection
 
 @section('js')
-<script src="{{ url('js/stock/stock.js') }}"></script>
+<script src="{{ url('js/report/report.js') }}"></script>
 @endsection

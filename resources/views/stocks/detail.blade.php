@@ -52,7 +52,10 @@ Data Stok | Ubiku Dashboard
 								<td>{{$stock->product_code}}</td>
 								<td>{{$stock->variant}}</td>
 								<td>{{rupiah($stock->price)}}</td>
-								<td>{{$stock->stock}}</td>
+								<td>
+									{{$stock->stock}} 
+									<span class="badge" style="font-size: 10px; cursor: help;" data-toggle="tooltip" title="Terakhir diperbarui oleh {{strtoupper($stock->admin)}} pada {{f_datetime($stock->updated_at)}}">?</span>
+								</td>
 								<td>{{$stock->product_stock}}</td>
 								<td>
 									@if(Session::get('branch_id') == 1)

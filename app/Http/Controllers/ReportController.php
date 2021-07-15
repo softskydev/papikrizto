@@ -10,6 +10,7 @@ use App\Account;
 use App\HutangPiutang;
 use App\Stock;
 use App\Branch;
+use App\StockHistories;
 use PDF;
 
 class ReportController extends Controller
@@ -17,28 +18,64 @@ class ReportController extends Controller
     public function __construct(){
         $this->middleware('admin-middleware');
     }
-    public function stock(){
-        $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
-                    ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
-                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', 'product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'))
-                    ->where('stocks.stock', '>', 0)
-                    ->groupBy('stocks.id')
-                    ->orderBy('product_variants.product_code')
-                    ->get();
+    public function stock(Request $request){
+        if ($request->method() == 'GET') {
+            $report['start'] = 0;
+            $report['end'] = 0;
+
+            $report['stock'] = StockHistories::join('stocks', 'stocks.id', '=', 'stock_histories.stock_id')
+                        ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                        ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                        ->select('stock_histories.created_at', 'product_variants.product_code', 'product_variants.variant_name', 'stock_histories.quantity', 'stock_histories.status', 'product_stocks.nama_stock', 'product_variants.branch_id')
+                        ->orderBy('stock_histories.created_at', 'asc')
+                        ->get();
+        }else{
+            $report['start'] = $request->start;
+            $report['end'] = $request->end;
+            $report['stock'] = StockHistories::join('stocks', 'stocks.id', '=', 'stock_histories.stock_id')
+                        ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                        ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                        ->where([
+                            ['stock_histories.created_at', '>=', $request->start],
+                            ['stock_histories.created_at', '<=', $request->end]
+                        ])
+                        ->select('stock_histories.created_at', 'product_variants.product_code', 'product_variants.variant_name', 'stock_histories.quantity', 'stock_histories.status', 'product_stocks.nama_stock', 'product_variants.branch_id')
+                        ->orderBy('stock_histories.created_at', 'asc')
+                        ->get();
+
+        }
+
         $report['branch'] = Branch::all();
         return view('report/stock', $report);
     }
-    public function stock_print($id){
-        $report['stock'] = Stock::join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
-                    ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
-                    ->select('stocks.*', DB::raw('product_variants.variant_name AS variant'), DB::raw('product_variants.branch_id AS branch_id'), 'product_variants.product_code', 'product_stocks.nama_stock', DB::raw('SUM(stocks.stock) AS stock'))
-                    ->where([
-                        ['stocks.stock', '>', 0],
-                        ['product_variants.branch_id', '=', $id]
-                    ])
-                    ->groupBy('stocks.id')
-                    ->orderBy('product_variants.product_code')
-                    ->get();
+    public function stock_print($id, $start, $end){
+        if ($start == 0 || $end == 0) {
+            $report['start'] = 0;
+            $report['end'] = 0;
+
+            $report['stock'] = StockHistories::join('stocks', 'stocks.id', '=', 'stock_histories.stock_id')
+                        ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                        ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                        ->where('product_variants.branch_id', $id)
+                        ->select('stock_histories.created_at', 'product_variants.product_code', 'product_variants.variant_name', 'stock_histories.quantity', 'stock_histories.status', 'product_stocks.nama_stock', 'product_variants.branch_id')
+                        ->orderBy('stock_histories.created_at', 'asc')
+                        ->get();
+        }else{
+            $report['start'] = $start;
+            $report['end'] = $end;
+            $report['stock'] = StockHistories::join('stocks', 'stocks.id', '=', 'stock_histories.stock_id')
+                        ->join('product_variants', 'product_variants.id', '=', 'stocks.variant_id')
+                        ->join('product_stocks', 'product_stocks.id', '=', 'stocks.product_stock_id')
+                        ->where([
+                            ['product_variants.branch_id', '=', $id],
+                            ['stock_histories.created_at', '>=', $start],
+                            ['stock_histories.created_at', '<=', $end]
+                        ])
+                        ->select('stock_histories.created_at', 'product_variants.product_code', 'product_variants.variant_name', 'stock_histories.quantity', 'stock_histories.status', 'product_stocks.nama_stock', 'product_variants.branch_id')
+                        ->orderBy('stock_histories.created_at', 'asc')
+                        ->get();
+        }
+
         $report['branch'] = Branch::where('id', $id)->first()->name;
 
         $pdf = PDF::loadview('report/stock_pdf',$report)->setPaper('A4', 'potrait');

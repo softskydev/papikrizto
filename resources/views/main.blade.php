@@ -164,7 +164,7 @@
 <body>
 <div class="main-menu">
 	<header class="header">
-		<a href="index.html" class="logo"><i class="ico ti-money"></i>Admin ({{Session::get('branch_name')}})</a>
+		<a href="/dashboard" class="logo"><i class="ico ti-money"></i>Admin ({{Session::get('branch_name')}})</a>
 		<button type="button" class="button-close fa fa-times js__menu_close"></button>
 	</header>
 	<!-- /.header -->
@@ -247,7 +247,7 @@
 <div class="fixed-navbar">
 	<div class="pull-left">
 		<button type="button" class="menu-mobile-button glyphicon glyphicon-menu-hamburger js__menu_mobile"></button>
-		<h1 class="page-title">{{ config('app.name') }}</h1>
+		<h1 class="page-title"></h1>
 		<!-- /.page-title -->
 	</div>
 	<!-- /.pull-left -->

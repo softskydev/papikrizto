@@ -28,7 +28,11 @@ class DashboardController extends Controller
                                                             ->select(DB::raw('sum(total) as total_transction'))
                                                             ->first(),
             'total_customers'   => DB::table('customers')->select(DB::raw('count(*) as total_cust'))
+                                                            ->where('branch_id', Session::get('branch_id'))
                                                             ->first(),
+            'total_sales'   => DB::table('sales')->select(DB::raw('count(*) as total_sales'))
+                                                            ->where('branch_id', Session::get('branch_id'))
+                                                            ->first()
         ];
 
         if (Session::get('branch_id') == 1) {

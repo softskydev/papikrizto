@@ -33,6 +33,53 @@
 		return $temp;
 	}
 
+	function f_datetime($timestamp){
+		$tmp = explode(' ', $timestamp);
+		$date = $tmp[0];
+		$time = $tmp[1];
+		$tanggal = explode("-", $date);
+
+		$bulan = array(
+			'01' => "Januari",
+			'02' => "Februari",
+			'03' => "Maret",
+			'04' => "April",
+			'05' => "Mei",
+			'06' => "Juni",
+			'07' => "Juli",
+			'08' => "Agustus",
+			'09' => "September",
+			'10' => "Oktober",
+			'11' => "November",
+			'12' => "Desember"
+		); 
+
+		return $tanggal['2']." ".$bulan[$tanggal['1']]." ".$tanggal['0']." ".$time;
+	}
+
+	function f_datestamp($timestamp){
+		$tmp = explode(' ', $timestamp);
+		$date = $tmp[0];
+		$tanggal = explode("-", $date);
+
+		$bulan = array(
+			'01' => "Januari",
+			'02' => "Februari",
+			'03' => "Maret",
+			'04' => "April",
+			'05' => "Mei",
+			'06' => "Juni",
+			'07' => "Juli",
+			'08' => "Agustus",
+			'09' => "September",
+			'10' => "Oktober",
+			'11' => "November",
+			'12' => "Desember"
+		); 
+
+		return $tanggal['2']." ".$bulan[$tanggal['1']]." ".$tanggal['0'];
+	}
+
 	function format($tgl){
 		$tanggal = explode("-", $tgl);
 		$bulan = array(

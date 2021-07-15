@@ -63,7 +63,8 @@ Route::resource('hutangpiutang', 'HutangPiutangController');
 Route::resource('asset', 'AssetController');
 
 Route::get('report/stock', 'ReportController@stock');
-Route::get('report/stock/print/{id}', 'ReportController@stock_print');
+Route::post('report/stock', 'ReportController@stock');
+Route::get('report/stock/print/{branch_id}/{start}/{end}', 'ReportController@stock_print');
 Route::get('report/labarugi', 'ReportController@labarugi');
 Route::post('report/labarugi/print/{id}', 'ReportController@labarugi_print');
 Route::get('report/neraca', 'ReportController@neraca');
